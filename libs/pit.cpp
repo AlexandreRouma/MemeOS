@@ -1,17 +1,18 @@
 #include "io.h"
 #include "pit.h"
+#include "string.h"
+#include "terminal.h"
 
 PIT_Class PIT;
 
 void PIT_Class::Init() {
-    outb(0x20, 0x11);
-    outb(0xA0, 0x11);
-    outb(0x21, 0x20);
-    outb(0xA1, 0x28);
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
-    outb(0x21, 0x01);
-    outb(0xA1, 0x01);
-    outb(0x21, 0x0);
-    outb(0xA1, 0x0);
+    int divisor = 1193180 / 1000;       /* Calculate our divisor */
+    outb(0x43, 0x36);             /* Set our command byte 0x36 */
+    outb(0x40, divisor & 0xFF);   /* Set low byte of divisor */
+    outb(0x40, divisor >> 8);     /* Set high byte of divisor */
+}
+
+void PIT_Class::delay(uint32_t ms) {
+    uint32_t endtick = system_ticks + ms;
+    while (system_ticks < endtick);
 }

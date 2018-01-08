@@ -77,6 +77,7 @@ void IDT_Class::load() {
     encodeIdtEntry(&_IDT[8 * 30], (uint32_t)&_isr30, 0x08, 0x8E);
     encodeIdtEntry(&_IDT[8 * 31], (uint32_t)&_isr31, 0x08, 0x8E);
 
+    encodeIdtEntry(&_IDT[8 * 32], (uint32_t)&ASM_ISR_PIT, 0x08, 0x8E); // PIT
     encodeIdtEntry(&_IDT[8 * 33], (uint32_t)&ASM_ISR_KBD, 0x08, 0x8E); // Keyboard
 
     lidt(&_IDT, 256 * 8);

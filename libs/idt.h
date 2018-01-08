@@ -8,6 +8,7 @@ class IDT_Class {
 extern "C" 
 {
     extern void ASM_ISR_0(void);
+    extern void ASM_ISR_PIT(void);
     extern void ASM_ISR_KBD(void);
     extern void _isr0(void);
     extern void _isr1(void);

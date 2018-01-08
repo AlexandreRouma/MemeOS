@@ -1,5 +1,7 @@
 #include "io.h"
 #include "terminal.h"
+#include "pit.h"
+#include "string.h"
 
 /* This defines what the stack looks like after an ISR was running */
 struct regs
@@ -48,8 +50,12 @@ char *exception_messages[] =
 extern "C" 
 {
     void ISR_0(void) {
+        outb(0x20,0x20); // STFU no one cares XD
+    }
+
+    void ISR_PIT(void) {
         outb(0x20,0x20);
-        //Terminal.println("DEFAULT !");
+        system_ticks++;
     }
 
     void ISR_KBD(void) {
@@ -68,7 +74,7 @@ extern "C"
         *  In this tutorial, we will simply halt the system using an
         *  infinite loop */
         Terminal.println(exception_messages[r->int_no]);
-        Terminal.println(" Exception. System Halted!\n");
+        Terminal.println(" Exception. System Halted!\n");  // EPIC FAIL
         for (;;);
     }
 }

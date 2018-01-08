@@ -5,7 +5,7 @@ CC=i686-elf-g++
 CFLAGS=
 CPPFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wwrite-strings -I$(INCLUDES)
 
-all: bin/MemeOS.bin
+all: clean bin/MemeOS.bin
 
 bin/MemeOS.bin: build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o
 	i686-elf-g++ -T linker.ld -o bin/MemeOS.bin -ffreestanding -O2 -nostdlib build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o -lgcc
@@ -24,3 +24,6 @@ build/asm_gdt.o: libs/asm_gdt.asm
 
 build/%.o : libs/%.cpp
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+clean: 
+	-rm build/*.o;

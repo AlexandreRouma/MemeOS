@@ -234,6 +234,14 @@ ASM_ISR_0:
     popal;
     iret
 
+.global ASM_ISR_PIT
+ASM_ISR_PIT:
+    pushal;
+    cld /* C code following the sysV ABI requires DF to be clear on function entry */
+    call ISR_PIT
+    popal;
+    iret
+
 .global ASM_ISR_KBD
 ASM_ISR_KBD:
     pushal;

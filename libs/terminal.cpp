@@ -69,7 +69,7 @@ void Terminal_Class::clear() {
 
 void Terminal_Class::scrollUp(uint8_t n) {
     for (int i = 0; i < n; i++) {
-        memmove(&frame_buffer[0], &frame_buffer[terminal_width], terminal_width * (terminal_height - 1));
+        memmove(&frame_buffer[0], &frame_buffer[terminal_width], (terminal_width * (terminal_height - 1)) * 2);
         for (int x = 0; x < terminal_width; x++) {
             frame_buffer[x + ((terminal_height - 1) * terminal_width)] = ' ' | (text_color << 8);
         }
@@ -78,7 +78,7 @@ void Terminal_Class::scrollUp(uint8_t n) {
 
 void Terminal_Class::scrollDown(uint8_t n) {
     for (int i = 0; i < n; i++) {
-        memmove(&frame_buffer[terminal_width], &frame_buffer[0], terminal_width * (terminal_height - 1));
+        memmove(&frame_buffer[terminal_width], &frame_buffer[0], (terminal_width * (terminal_height - 1)) * 2);
         for (int x = 0; x < terminal_width; x++) {
             frame_buffer[x] = ' ' | (text_color << 8);
         }
@@ -88,6 +88,7 @@ void Terminal_Class::scrollDown(uint8_t n) {
 void Terminal_Class::newLine() {
     if (cursor_y == 24) {
         scrollUp(1);
+        cursor_y = 24;
     }
     else {
         cursor_y++;
