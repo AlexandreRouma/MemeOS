@@ -55,14 +55,12 @@ extern "C"
 
     void ISR_PIT(void) {
         outb(0x20,0x20);
-        system_ticks++;
+        PIT.system_ticks++;
     }
 
     void ISR_KBD(void) {
         outb(0x20,0x20);
-        char* c = " ";
-        c[0] = inb(0x60);
-        Terminal.print(c);
+        char c = inb(0x60);
     }
 
     void _fault_handler(struct regs *r)

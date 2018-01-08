@@ -6,7 +6,9 @@
 #include "idt.h"
 #include "pic.h"
 #include "pit.h"
+#include "speaker.h"
 #include "string.h"
+#include "panic.h"
 
 extern "C" // Use C link for kernel_main
 
@@ -16,7 +18,7 @@ void kernel_main(void)
     Terminal.setColor(0x0E);
     Terminal.clear();
     Terminal.hideCursor();
-    Terminal.println("Welcome to MemeOS ! (Real Hardware Test 1.0)");
+    Terminal.println("Welcome to MemeOS ! (DEBUG)");
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...     ");
@@ -27,25 +29,26 @@ void kernel_main(void)
     PIC.Init();
     Terminal.OK();
 
+    Terminal.print("Loading IDT...     ");
+    IDT.load();
+    Terminal.OK();
+
     Terminal.print("Configuring PIT... ");
     PIT.Init();
     Terminal.OK();
 
-    Terminal.print("Loading IDT...     ");
-    IDT.load();
     asm("sti");
-    Terminal.OK();
-
 
     Terminal.println("\n\nMemeOS> ");
 
-    for (;;) {
-        Terminal.print("Delay Timeout !");
+    for (int i = 0; i < 3; i++) {
         PIT.delay(1000);
+        Terminal.println("Delay Timeout !");
     }
+
+    kernel_panic(0x0420, "OOPS, You just got bamboozled by the allmighty\n  R.S.O.D lmao ! ERROR: Insert stupid crash message here...");
 
     for (;;) {
         asm("hlt");
     }
-    
 }

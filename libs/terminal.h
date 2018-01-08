@@ -17,6 +17,8 @@ class Terminal_Class {
         void OK(bool newLine = true);
         void WARN(bool newLine = true);
         void FAILED(bool newLine = true);
+        uint8_t getWidth();
+        uint8_t getHeight();
 };
 
 extern Terminal_Class Terminal;

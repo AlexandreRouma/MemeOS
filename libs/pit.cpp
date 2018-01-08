@@ -14,5 +14,7 @@ void PIT_Class::Init() {
 
 void PIT_Class::delay(uint32_t ms) {
     uint32_t endtick = system_ticks + ms;
-    while (system_ticks < endtick);
+    while (system_ticks < endtick) {
+        asm("nop");
+    }
 }
