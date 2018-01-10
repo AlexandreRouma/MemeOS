@@ -2,6 +2,7 @@
 #include "terminal.h"
 #include "pit.h"
 #include "string.h"
+#include "keyboard.h"
 
 /* This defines what the stack looks like after an ISR was running */
 struct regs
@@ -60,7 +61,7 @@ extern "C"
 
     void ISR_KBD(void) {
         outb(0x20,0x20);
-        char c = inb(0x60);
+        Keyboard.update();
     }
 
     void _fault_handler(struct regs *r)

@@ -9,6 +9,7 @@
 #include "speaker.h"
 #include "string.h"
 #include "panic.h"
+#include "keyboard.h"
 
 extern "C" // Use C link for kernel_main
 
@@ -39,14 +40,9 @@ void kernel_main(void)
 
     asm("sti");
 
-    Terminal.println("\n\nMemeOS> ");
+    Terminal.print("\n\nMemeOS> ");
 
-    for (int i = 0; i < 3; i++) {
-        PIT.delay(1000);
-        Terminal.println("Delay Timeout !");
-    }
-
-    kernel_panic(0x0420, "OOPS, You just got bamboozled by the allmighty\n  R.S.O.D lmao ! ERROR: Insert stupid crash message here...");
+    Terminal.println(dumpHexByte(Keyboard.KEYCODES.F11));
 
     for (;;) {
         asm("hlt");
