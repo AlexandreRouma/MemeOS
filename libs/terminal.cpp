@@ -10,6 +10,7 @@ uint8_t cursor_x = 0;
 uint8_t cursor_y = 0;
 uint8_t terminal_width = 0;
 uint8_t terminal_height = 0;
+uint8_t last_clear_color = 0x00;
 
 void Terminal_Class::Init(uint8_t width, uint8_t height) {
     terminal_width = width;
@@ -30,7 +31,6 @@ void Terminal_Class::print(char* str) {
             newLine();
         }
         else if (cursor_x == terminal_width - 1) {
-            cursor_x = 0;
             newLine();
         }
         else {
@@ -44,9 +44,11 @@ void Terminal_Class::print(char* str) {
 void Terminal_Class::println(char* str) {
     print(str);
     newLine();
+    setCursor(cursor_x, cursor_y);
 }
 
 void Terminal_Class::setCursor(uint8_t x, uint8_t y)  {
+    frame_buffer[x + (terminal_width * y)] = (frame_buffer[x + (terminal_width * y)] & 0x00FF) | (text_color << 8);
     cursor_x = x;
     cursor_y = y;
     uint16_t pos = x + (terminal_width * y);
@@ -88,7 +90,6 @@ void Terminal_Class::scrollDown(uint8_t n) {
 void Terminal_Class::newLine() {
     if (cursor_y == 24) {
         scrollUp(1);
-        cursor_y = 24;
         cursor_x = 0;
     }
     else {

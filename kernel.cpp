@@ -19,7 +19,7 @@ void kernel_main(void)
     Terminal.setColor(0x0E);
     Terminal.clear();
     Terminal.hideCursor();
-    Terminal.println("Welcome to MemeOS ! (DEBUG)");
+    Terminal.println("Welcome to MemeOS ! (REAL HARDWARE TEST 5)");
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...     ");
@@ -41,8 +41,8 @@ void kernel_main(void)
     asm("sti");
 
     Terminal.print("\n\nMemeOS> ");
-
-    Terminal.println(dumpHexByte(Keyboard.KEYCODES.F11));
+    Terminal.showCursor(13, 15);
+    Terminal.setCursor(0, 0);
 
     for (;;) {
         asm("hlt");

@@ -5,7 +5,9 @@ CC=i686-elf-g++
 CFLAGS=
 CPPFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wwrite-strings -I$(INCLUDES)
 
-all: clean bin/MemeOS.bin
+all: clean bin/MemeOS.bin success
+
+iso: clean bin/MemeOS.bin bin/MemeOS.iso success
 
 bin/MemeOS.bin: build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o
 	i686-elf-g++ -T linker.ld -o bin/MemeOS.bin -ffreestanding -O2 -nostdlib build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o -lgcc
@@ -22,8 +24,15 @@ build/isr.o: libs/isr.asm
 build/asm_gdt.o: libs/asm_gdt.asm
 	i686-elf-as libs/asm_gdt.asm -o build/asm_gdt.o
 
-build/%.o : libs/%.cpp
+build/%.o: libs/%.cpp
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+
+bin/MemeOS.iso: bin/MemeOS.bin
+	cp bin/MemeOS.bin ISO/boot/MemeOS
+	grub-mkrescue -o bin/MemeOS.iso ISO
 
 clean: 
 	-rm build/*.o;
+
+success:
+	# SUCCESS
