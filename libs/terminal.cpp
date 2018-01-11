@@ -42,7 +42,18 @@ void Terminal_Class::print(char* str) {
 }
 
 void Terminal_Class::println(char* str) {
-    print(str);
+    for (int i = 0; i < strlen(str); i++) {
+        if (str[i] == '\n'){
+            newLine();
+        }
+        else if (cursor_x == terminal_width - 1) {
+            newLine();
+        }
+        else {
+            frame_buffer[cursor_x + (terminal_width * cursor_y)] = str[i] | (text_color << 8);
+            cursor_x++;
+        }
+    }
     newLine();
     setCursor(cursor_x, cursor_y);
 }
@@ -98,7 +109,12 @@ void Terminal_Class::newLine() {
     }
 }
 
-void Terminal_Class::showCursor(uint8_t start, uint8_t end) {
+void Terminal_Class::showCursor(uint8_t thickness) {
+
+    outb(0x3D4, 0x09);
+    uint8_t end = inb(0x3D5) & 0b00011111; // Get the max scanline
+    uint8_t start = end - thickness;
+
     outb(0x3D4, 0x0A);
 	outb(0x3D5, (inb(0x3D5) & 0xC0) | start);
 	outb(0x3D4, 0x0B);

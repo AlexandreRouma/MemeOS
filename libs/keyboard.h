@@ -2,6 +2,7 @@
 
 class Keyboard_Class {
     public:
+        void Init();
         void update();
         struct _KEYCODES {
             enum _KEYCODES_ {
@@ -14,8 +15,8 @@ class Keyboard_Class {
                 N, M, COMMA, DOT, FSLASH, RSHIFT, KPMULT, LALT,
                 SPACE, CAPSLOCK, F1, F2, F3, F4, F5, F6,
                 F7, F8, F9, F10, NUMLOCK, SCRLOCK, KP7, KP8,
-                KP9, KPMINUS, KP4, KP5, KP6, KPPLUS, KP1,
-                KP2, KP3, KP0, KPDOT, F11, F12
+                KP9, KPMINUS, KP4, KP5, KP6, KPPLUS, KP1, KP2,
+                KP3, KP0, KPDOT, F11, F12
             };
         } KEYCODES;
 };

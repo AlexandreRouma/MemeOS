@@ -3,21 +3,38 @@
 #include "keyboard.h"
 #include "terminal.h"
 #include "string.h"
+#include "keyboard_layouts.h"
 
 #define PRESSED     0
 #define RELEASED    1
 
 Keyboard_Class Keyboard;
 
+int last_key_pressed = -1;
+
 void writeToBuffer(uint8_t keycode, uint8_t type) {
     if (type == PRESSED) {
-        Terminal.print("PRESSED:  ");
-        Terminal.println(dumpHexByte(keycode));
+        char * cc = " ";
+        cc[0] = (char)KEYBOARD_LAYOUT_FR_BE[0][keycode];
+        Terminal.print(cc);
+        //Terminal.print("PRESSED:  ");
+        //Terminal.println(dumpHexByte(keycode));
     }
     else {
-        Terminal.print("RELEASED: ");
-        Terminal.println(dumpHexByte(keycode));
+        //Terminal.print("RELEASED: ");
+        //Terminal.println(dumpHexByte(keycode));
     }
+}
+
+void Keyboard_Class::Init() {
+    outb(0x64, 0xAD);
+    outb(0x64, 0xA7);
+    uint8_t status = inb(0x64);
+    while (status & 0b00000001 == 1) {
+        uint8_t dummy = inb(0x60);
+    }
+    outb(0x64, 0xAE);
+    outb(0x64, 0xA8);
 }
 
 void Keyboard_Class::update() {

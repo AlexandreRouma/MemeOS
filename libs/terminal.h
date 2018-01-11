@@ -12,7 +12,7 @@ class Terminal_Class {
         void scrollUp(uint8_t n);
         void scrollDown(uint8_t n);
         void newLine();
-        void showCursor(uint8_t start, uint8_t end);
+        void showCursor(uint8_t thickness);
         void hideCursor();
         void OK(bool newLine = true);
         void WARN(bool newLine = true);
