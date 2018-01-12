@@ -19,7 +19,7 @@ void kernel_main(void)
     Terminal.hideCursor();
     Terminal.setColor(0x0E);
     Terminal.clear();
-    Terminal.println("Welcome to MemeOS ! (REAL HARDWARE TEST 7)");
+    Terminal.println("Welcome to MemeOS ! (REAL HARDWARE TEST 9)");
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...           ");

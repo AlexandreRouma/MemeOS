@@ -16,7 +16,12 @@ class Keyboard_Class {
                 SPACE, CAPSLOCK, F1, F2, F3, F4, F5, F6,
                 F7, F8, F9, F10, NUMLOCK, SCRLOCK, KP7, KP8,
                 KP9, KPMINUS, KP4, KP5, KP6, KPPLUS, KP1, KP2,
-                KP3, KP0, KPDOT, F11, F12
+                KP3, KP0, KPDOT, F11, F12, MMPT, MMNT, KPENTER,
+                RCTRL, MMMUTE, MMCALC, MMPLAY, MMSTOP, MMVD, MMVU,MMHOME,
+                KPSLASH, ALTGR, HOME, UP, PGUP, LEFT, RIGHT, END,
+                DOWN, PGDOWN, INSERT, DEL, LGUI, RGUI, APPS, POWER,
+                SLEEP, WAKE, WWSEARCH, WWFAVORITE, WWREFRESH, WWSTOP, WWFORWARD, WWBACK,
+                MMMY, MMEMAIL, MMSELECT
             };
         } KEYCODES;
 };
