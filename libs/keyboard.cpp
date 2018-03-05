@@ -50,12 +50,6 @@ uint8_t last = 0;
 
 void Keyboard_Class::update() {
     uint8_t scancode = inb(0x60);
-    if (scancode != last) {
-        last = scancode;
-        Terminal.println(dumpHexByte(scancode));
-    }
-    return;
-
     if (E1 > 0) {
         E1--;
         return;
@@ -85,6 +79,9 @@ void Keyboard_Class::update() {
         else {
             
         }
+    }
+    else if (E1) {
+        E1 = false;
     }
     else {
         if (scancode <= 0x53) {
