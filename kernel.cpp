@@ -43,10 +43,16 @@ void kernel_main(void)
     Terminal.OK();
 
     asm("sti");
+    
+    
+    PIT.delay(1000);
+
+
 
     Terminal.print("\n\nMemeOS> ");
-    Speaker.tone(1000);
     Terminal.showCursor(2);
+
+    
 
     for (;;) {
         asm("hlt");
