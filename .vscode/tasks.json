@@ -19,7 +19,7 @@
             "command": "bash --login -c 'make iso'",
             "group": {
                 "kind": "test",
-                "isDefault": true
+                "isDefault": true,
             },
             "problemMatcher": []
         },

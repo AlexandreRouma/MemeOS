@@ -22,10 +22,9 @@ stack_top:
 .type _start, @function
 _start:
 	mov $stack_top, %esp
-
 	call kernel_main
-
 	cli
+	
 _end:	
 	hlt
 	jmp _end
