@@ -34,12 +34,16 @@ ISO_OUTPUT = ./bin/MemeOS.iso
 all: $(OUTPUT)
 
 clean:
-	$(DELETE) obj/*
-	$(DELETE) bin/*
+	$(DELETE) ./obj/*
+	$(DELETE) ./bin/*
 
 iso: all
 	cp $(OUTPUT) ./ISO/boot/MemeOS
 	grub-mkrescue -o $(ISO_OUTPUT) ./ISO
+
+folders:
+	mkdir -p ./bin
+	mkdir -p ./obj
 
 $(OUTPUT): $(OBJ_FILES)
 	$(GPP_CMD) $(LDFLAGS) -o $@ $^
