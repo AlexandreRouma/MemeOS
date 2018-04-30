@@ -43,7 +43,6 @@ void kernel_main(void)
     Terminal.OK();
 
     asm("sti");
-    
 
     Terminal.print("\n\nMemeOS> ");
     Terminal.showCursor(2);

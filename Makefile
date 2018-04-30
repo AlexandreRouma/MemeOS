@@ -23,8 +23,8 @@ ASM_OBJ = $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_SRC)) $(patsubst $(LI
 # COMPILER STUFF
 GPP_CMD = i686-elf-g++
 GAS_CMD = i686-elf-as
-LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc
-CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wwrite-strings
+LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wwrite-strings
+CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar
 CXXFLAGS = 
 GASFLAGS = 
 OBJ_FILES = $(CPP_OBJ) $(ASM_OBJ)

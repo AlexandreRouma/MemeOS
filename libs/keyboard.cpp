@@ -30,7 +30,7 @@ void writeToBuffer(uint8_t keycode, uint8_t type) {
 
 void waitIO() {
     uint8_t status = inb(0x64);
-    while (status & 0b00000001 == 1) {
+    while ((status & 0b00000001) == 1) {
         uint8_t dummy = inb(0x60);
     }
 }

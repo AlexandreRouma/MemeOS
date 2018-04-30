@@ -26,7 +26,7 @@ void Terminal_Class::putcar(char c, uint8_t x, uint8_t y) {
 }
 
 void Terminal_Class::print(char* str) {
-    for (int i = 0; i < strlen(str); i++) {
+    for (uint32_t i = 0; i < strlen(str); i++) {
         if (str[i] == '\n'){
             newLine();
         }
@@ -42,7 +42,7 @@ void Terminal_Class::print(char* str) {
 }
 
 void Terminal_Class::println(char* str) {
-    for (int i = 0; i < strlen(str); i++) {
+    for (uint32_t i = 0; i < strlen(str); i++) {
         if (str[i] == '\n'){
             newLine();
         }
@@ -70,8 +70,8 @@ void Terminal_Class::setCursor(uint8_t x, uint8_t y)  {
 }
 
 void Terminal_Class::clear() {
-    for (int y = 0; y < terminal_height; y++) {
-        for (int x = 0; x < terminal_width; x++) {
+    for (uint8_t y = 0; y < terminal_height; y++) {
+        for (uint8_t x = 0; x < terminal_width; x++) {
             frame_buffer[x + (terminal_width * y)] = ' ' | (text_color << 8);
         }
     }
@@ -81,9 +81,9 @@ void Terminal_Class::clear() {
 }
 
 void Terminal_Class::scrollUp(uint8_t n) {
-    for (int i = 0; i < n; i++) {
+    for (uint8_t i = 0; i < n; i++) {
         memmove(&frame_buffer[0], &frame_buffer[terminal_width], terminal_width * (terminal_height - 1) * 2);
-        for (int x = 0; x < terminal_width; x++) {
+        for (uint8_t x = 0; x < terminal_width; x++) {
             frame_buffer[x + ((terminal_height - 1) * terminal_width)] = ' ' | (text_color << 8);
         }
     }
