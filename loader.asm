@@ -26,7 +26,8 @@ _start:
 	call kernel_main
 
 	cli
-1:	hlt
-	jmp 1b
+_end:	
+	hlt
+	jmp _end
 
 .size _start, . - _start

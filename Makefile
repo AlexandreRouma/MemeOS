@@ -1,38 +1,57 @@
-INCLUDES=libs
-SRCFILES=$(wildcard libs/*.cpp)
-OBJFILES=$(patsubst libs/%.cpp,build/%.o,$(SRCFILES))
-CC=i686-elf-g++
-CFLAGS=
-CPPFLAGS=-ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wwrite-strings -I$(INCLUDES)
+# <-- MemeOS Makefile -->
+# Copyright xX_WhatsTheGeek_Xx (c)
 
-all: clean bin/MemeOS.bin success
+# CONFIGURATION
+DELETE = rm -f 
 
-iso: clean bin/MemeOS.bin bin/MemeOS.iso success
+# DIRECTORIES
+SRC_DIR = ./
+LIB_DIR = ./libs
+OBJ_DIR = ./obj
+INC_DIR = ./libs/includes
 
-bin/MemeOS.bin: build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o
-	i686-elf-g++ -T linker.ld -o bin/MemeOS.bin -ffreestanding -O2 -nostdlib build/isr.o build/asm_gdt.o $(OBJFILES) build/loader.o build/kernel.o -lgcc
+# C++
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+LIB_FILES = $(wildcard $(LIB_DIR)/*.cpp)
+CPP_OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES)) $(patsubst $(LIB_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(LIB_FILES))
 
-build/loader.o: loader.asm
-	i686-elf-as loader.asm -o build/loader.o
+# ASSEMBLY
+ASM_SRC = $(wildcard $(SRC_DIR)/*.asm)
+ASM_LIB = $(wildcard $(LIB_DIR)/*.asm)
+ASM_OBJ = $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_SRC)) $(patsubst $(LIB_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_LIB))
 
-build/kernel.o: kernel.cpp
-	i686-elf-g++ $(CPPFLAGS) -c kernel.cpp -o build/kernel.o
+# COMPILER STUFF
+GPP_CMD = i686-elf-g++
+GAS_CMD = i686-elf-as
+LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc
+CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wwrite-strings
+CXXFLAGS = 
+GASFLAGS = 
+OBJ_FILES = $(CPP_OBJ) $(ASM_OBJ)
+OUTPUT = ./bin/MemeOS.bin
+ISO_OUTPUT = ./bin/MemeOS.iso
 
-build/isr.o: libs/isr.asm
-	i686-elf-as libs/isr.asm -o build/isr.o
+all: $(OUTPUT)
 
-build/asm_gdt.o: libs/asm_gdt.asm
-	i686-elf-as libs/asm_gdt.asm -o build/asm_gdt.o
+clean:
+	$(DELETE) obj/*
+	$(DELETE) bin/*
 
-build/%.o: libs/%.cpp
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
+iso: all
+	cp $(OUTPUT) ./ISO/boot/MemeOS
+	grub-mkrescue -o $(ISO_OUTPUT) ./ISO
 
-bin/MemeOS.iso: bin/MemeOS.bin
-	cp bin/MemeOS.bin ISO/boot/MemeOS
-	grub-mkrescue -o bin/MemeOS.iso ISO
+$(OUTPUT): $(OBJ_FILES)
+	$(GPP_CMD) $(LDFLAGS) -o $@ $^
 
-clean: 
-	-rm build/*.o;
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(GPP_CMD) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-success:
-	# SUCCESS
+$(OBJ_DIR)/%.o: $(LIB_DIR)/%.cpp
+	$(GPP_CMD) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm
+	$(GAS_CMD) $(GASFLAGS) -o $@ $<
+
+$(OBJ_DIR)/%.o: $(LIB_DIR)/%.asm
+	$(GAS_CMD) $(GASFLAGS) -o $@ $<
