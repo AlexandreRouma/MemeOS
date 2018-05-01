@@ -5,7 +5,7 @@
             "includePath": [
                 "/usr/include",
                 "/usr/local/include",
-                "${workspaceRoot}"
+                "${workspaceRoot}/libs/includes"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -14,7 +14,7 @@
                     "/usr/include",
                     "/usr/local/include",
                     "${workspaceRoot}",
-                    "${workspaceRoot}/libs"
+                    "${workspaceRoot}/libs/includes"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
@@ -29,7 +29,7 @@
             "includePath": [
                 "/usr/include",
                 "/usr/local/include",
-                "${workspaceRoot}"
+                "${workspaceRoot}/libs/includes"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -37,7 +37,7 @@
                 "path": [
                     "/usr/include",
                     "/usr/local/include",
-                    "${workspaceRoot}"
+                    "${workspaceRoot}/libs/includes"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
@@ -51,7 +51,10 @@
                 "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
                 "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
                 "${workspaceRoot}",
-                "${workspaceRoot}/libs"
+                "${workspaceRoot}/libs",
+                "${workspaceFolder}/libs/includes",
+                "D:/cygwin64/usr/include",
+                "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/6.3.0/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -64,7 +67,9 @@
                     "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
                     "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
                     "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
-                    "${workspaceRoot}"
+                    "${workspaceRoot}/libs/includes",
+                    "D:/cygwin64/usr/include",
+                    "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/6.3.0/include"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

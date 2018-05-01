@@ -3,7 +3,6 @@
 #include "keyboard.h"
 #include "terminal.h"
 #include "string.h"
-#include "keyboard_layouts.h"
 #include "speaker.h"
 #include "pit.h"
 
@@ -16,9 +15,10 @@ int last_key_pressed = -1;
 
 void writeToBuffer(uint8_t keycode, uint8_t type) {
     if (type == PRESSED) {
-        char * cc = " ";
-        cc[0] = (char)KEYBOARD_LAYOUT_FR_BE[0][keycode];
-        Terminal.print(cc);
+        last_key_pressed = keycode;
+        //char * cc = " ";
+        //cc[0] = (char)KEYBOARD_LAYOUT_FR_BE[0][keycode];
+        //Terminal.print(cc);
         //Terminal.print("PRESSED:  ");
         //Terminal.println(dumpHexByte(keycode));
     }
@@ -26,6 +26,15 @@ void writeToBuffer(uint8_t keycode, uint8_t type) {
         //Terminal.print("RELEASED: ");
         //Terminal.println(dumpHexByte(keycode));
     }
+}
+
+uint8_t Keyboard_Class::readKey(bool wait) {
+    while (wait && last_key_pressed == -1) {
+        asm("nop");
+    }
+    uint8_t keycode = last_key_pressed;
+    last_key_pressed = -1;
+    return keycode;
 }
 
 void waitIO() {

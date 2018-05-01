@@ -8,6 +8,18 @@ uint64_t strlen(const char* str){
 	return len;
 }
 
+bool strcmp(const char* str_a, const char* str_b) {
+	if (strlen(str_a) != strlen(str_b)) {
+		return false;
+	}
+	for (uint32_t i = 0; i < strlen(str_a); i++) {
+		if (str_a[i] != str_b[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void* memmove(void* dstptr, const void* srcptr, uint64_t size) {
 	unsigned char* dst = (unsigned char*) dstptr;
 	const unsigned char* src = (const unsigned char*) srcptr;

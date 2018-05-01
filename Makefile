@@ -7,13 +7,15 @@ DELETE = rm -f
 # DIRECTORIES
 SRC_DIR = ./
 LIB_DIR = ./libs
+SHELL_DIR = ./shell
 OBJ_DIR = ./obj
 INC_DIR = ./libs/includes
 
 # C++
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 LIB_FILES = $(wildcard $(LIB_DIR)/*.cpp)
-CPP_OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES)) $(patsubst $(LIB_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(LIB_FILES))
+SHELL_FILES = $(wildcard $(SHELL_DIR)/*.cpp)
+CPP_OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES)) $(patsubst $(LIB_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(LIB_FILES)) $(patsubst $(SHELL_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SHELL_FILES))
 
 # ASSEMBLY
 ASM_SRC = $(wildcard $(SRC_DIR)/*.asm)
@@ -24,7 +26,7 @@ ASM_OBJ = $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_SRC)) $(patsubst $(LI
 GPP_CMD = i686-elf-g++
 GAS_CMD = i686-elf-as
 LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wwrite-strings
-CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar
+CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar -Wno-unused-parameter -Wno-overflow
 CXXFLAGS = 
 GASFLAGS = 
 OBJ_FILES = $(CPP_OBJ) $(ASM_OBJ)
@@ -52,6 +54,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(GPP_CMD) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o: $(LIB_DIR)/%.cpp
+	$(GPP_CMD) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/%.o: $(SHELL_DIR)/%.cpp
 	$(GPP_CMD) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 	
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm

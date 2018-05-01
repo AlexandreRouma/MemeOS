@@ -61,19 +61,17 @@ extern "C"
     }
 
     void ISR_KBD(void) {
-        
         Keyboard.update();
         outb(0x20,0x20);
     }
 
-    void _fault_handler(struct regs *r)
-{
-    /* Is this a fault whose number is from 0 to 31? */
-    if (r->int_no < 32)
-    {
-        kernel_panic(r->int_no, exception_messages[r->int_no]);
-        for (;;);
+    void _fault_handler(struct regs *r) {
+        /* Is this a fault whose number is from 0 to 31? */
+        if (r->int_no < 32)
+        {
+            kernel_panic(r->int_no, exception_messages[r->int_no]);
+            for (;;);
+        }
     }
-}
 }
 

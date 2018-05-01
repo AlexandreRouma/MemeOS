@@ -10,15 +10,22 @@
 #include "string.h"
 #include "panic.h"
 #include "keyboard.h"
+#include "multiboot.h"
+#include "shell/shell.h"
 
 extern "C" // Use C link for kernel_main
 
-void kernel_main(void) 
+void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info) 
 {
     Terminal.Init(80, 25);
     Terminal.hideCursor();
     Terminal.setColor(0x0E);
     Terminal.clear();
+
+    if (multiboot_magic != 0x2BADB002) {
+        kernel_panic(0x0000, "Invalid multiboot signature !");
+    }
+
     Terminal.println("Welcome to MemeOS ! (DEBUG 12)");
     Terminal.setColor(0x07);
 
@@ -44,8 +51,7 @@ void kernel_main(void)
 
     asm("sti");
 
-    Terminal.print("\n\nMemeOS> ");
-    Terminal.showCursor(2);
+    shell_main();
 
     for (;;) {
         asm("hlt");
