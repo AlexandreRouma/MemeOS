@@ -1,9 +1,10 @@
-#include "io.h"
-#include "terminal.h"
-#include "pit.h"
-#include "string.h"
-#include "keyboard.h"
-#include "panic.h"
+#include <io.h>
+#include <terminal.h>
+#include <pit.h>
+#include <string.h>
+#include <keyboard.h>
+#include <panic.h>
+#include <syscalls.h>
 
 /* This defines what the stack looks like after an ISR was running */
 struct regs
@@ -63,6 +64,10 @@ extern "C"
     void ISR_KBD(void) {
         Keyboard.update();
         outb(0x20,0x20);
+    }
+
+    void ISR_SYSCALL(uint32_t id, uint32_t ebx, uint32_t ecx, uint32_t edx) {
+        KERN_EXEC_SYSCALL(id, ebx, ecx, edx);
     }
 
     void _fault_handler(struct regs *r) {

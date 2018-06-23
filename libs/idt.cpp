@@ -1,7 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "idt.h"
-#include "terminal.h"
+#include <idt.h>
 
 #define IDT_ENTRY_COUNT 256
 
@@ -44,41 +43,42 @@ void IDT_Class::load() {
         encodeIdtEntry(&_IDT[i * 8], (uint32_t)&ASM_ISR_0, 0x08, 0x8E);
     }
 
-    encodeIdtEntry(&_IDT[8 * 0], (uint32_t)&_isr0, 0x08, 0x8E); // Exceptions
-    encodeIdtEntry(&_IDT[8 * 1], (uint32_t)&_isr1, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 2], (uint32_t)&_isr2, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 3], (uint32_t)&_isr3, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 4], (uint32_t)&_isr4, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 5], (uint32_t)&_isr5, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 6], (uint32_t)&_isr6, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 7], (uint32_t)&_isr7, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 8], (uint32_t)&_isr8, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 9], (uint32_t)&_isr9, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 10], (uint32_t)&_isr10, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 11], (uint32_t)&_isr11, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 12], (uint32_t)&_isr12, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 13], (uint32_t)&_isr13, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 14], (uint32_t)&_isr14, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 15], (uint32_t)&_isr15, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 16], (uint32_t)&_isr16, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 17], (uint32_t)&_isr17, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 18], (uint32_t)&_isr18, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 19], (uint32_t)&_isr19, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 20], (uint32_t)&_isr20, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 21], (uint32_t)&_isr21, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 22], (uint32_t)&_isr22, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 23], (uint32_t)&_isr23, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 24], (uint32_t)&_isr24, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 25], (uint32_t)&_isr25, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 26], (uint32_t)&_isr26, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 27], (uint32_t)&_isr27, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 28], (uint32_t)&_isr28, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 29], (uint32_t)&_isr29, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 30], (uint32_t)&_isr30, 0x08, 0x8E);
-    encodeIdtEntry(&_IDT[8 * 31], (uint32_t)&_isr31, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x00], (uint32_t)&_isr0, 0x08, 0x8E); // Exceptions
+    encodeIdtEntry(&_IDT[8 * 0x01], (uint32_t)&_isr1, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x02], (uint32_t)&_isr2, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x03], (uint32_t)&_isr3, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x04], (uint32_t)&_isr4, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x05], (uint32_t)&_isr5, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x06], (uint32_t)&_isr6, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x07], (uint32_t)&_isr7, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x08], (uint32_t)&_isr8, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x09], (uint32_t)&_isr9, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0A], (uint32_t)&_isr10, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0B], (uint32_t)&_isr11, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0C], (uint32_t)&_isr12, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0D], (uint32_t)&_isr13, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0E], (uint32_t)&_isr14, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x0F], (uint32_t)&_isr15, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x10], (uint32_t)&_isr16, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x11], (uint32_t)&_isr17, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x12], (uint32_t)&_isr18, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x13], (uint32_t)&_isr19, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x14], (uint32_t)&_isr20, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x15], (uint32_t)&_isr21, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x16], (uint32_t)&_isr22, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x17], (uint32_t)&_isr23, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x18], (uint32_t)&_isr24, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x19], (uint32_t)&_isr25, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1A], (uint32_t)&_isr26, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1B], (uint32_t)&_isr27, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1C], (uint32_t)&_isr28, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1D], (uint32_t)&_isr29, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1E], (uint32_t)&_isr30, 0x08, 0x8E);
+    encodeIdtEntry(&_IDT[8 * 0x1F], (uint32_t)&_isr31, 0x08, 0x8E);
 
-    encodeIdtEntry(&_IDT[8 * 32], (uint32_t)&ASM_ISR_PIT, 0x08, 0x8E); // PIT
-    encodeIdtEntry(&_IDT[8 * 33], (uint32_t)&ASM_ISR_KBD, 0x08, 0x8E); // Keyboard
+    encodeIdtEntry(&_IDT[8 * 0x20], (uint32_t)&ASM_ISR_PIT, 0x08, 0x8E); // PIT
+    encodeIdtEntry(&_IDT[8 * 0x21], (uint32_t)&ASM_ISR_KBD, 0x08, 0x8E); // Keyboard
+    encodeIdtEntry(&_IDT[8 * 0x69], (uint32_t)&ASM_ISR_SYSCALL, 0x08, 0x8E); // Syscall
 
     lidt(&_IDT, 256 * 8);
 }

@@ -1,9 +1,9 @@
-#include "terminal.h"
-#include "string.h"
-#include "io.h"
-#include "keyboard.h"
-#include "keyboard_layouts.h"
-#include "serial.h"
+#include <terminal.h>
+#include <string.h>
+#include <io.h>
+#include <keyboard.h>
+#include <keyboard_layouts.h>
+#include <serial.h>
 
 Terminal_Class Terminal;
 
@@ -188,14 +188,13 @@ uint8_t Terminal_Class::getCursorY() {
 }
 
 void Terminal_Class::readLine(char* cmd_buffer) {
-    Serial com1(115200, 0x3F8);
-
     uint16_t cmd_buffer_l = 0;
     int backspaceXmax = Terminal.getCursorX();
     int backspaceYmax = Terminal.getCursorY();
-    uint8_t key = Keyboard.readKey(true);
-    while (key != Keyboard.KEYCODES.ENTER) {
-        if (key == Keyboard.KEYCODES.BACKSPACE) {
+    KeyboardEvent_t event = Keyboard.readEvent(true);
+    bool shift = 0;
+    while (event.keycode != Keyboard.KEYCODES.ENTER || event.type != Keyboard.EVENTTYPES.PRESSED) {
+        if (event.keycode == Keyboard.KEYCODES.BACKSPACE && event.type == Keyboard.EVENTTYPES.PRESSED) {
             if (Terminal.getCursorX() > backspaceXmax) {
                 int cx = Terminal.getCursorX();
                 int cy = Terminal.getCursorY();
@@ -206,14 +205,16 @@ void Terminal_Class::readLine(char* cmd_buffer) {
                 cmd_buffer[cmd_buffer_l] = 0x00;
             }
         }
-        else {
-            char* cc = " ";
-            cc[0] = KEYBOARD_LAYOUT_FR_BE[0][key];
-            Terminal.print(cc);
-            cmd_buffer[cmd_buffer_l] = KEYBOARD_LAYOUT_FR_BE[0][key];
-            cmd_buffer_l++;
-            com1.print(cc);
+        else if (event.type == Keyboard.EVENTTYPES.PRESSED) {
+            char c = Keyboard.getKeyChar(event.keycode);
+            if (c > 0) {
+                char* cc = " ";
+                cc[0] = c;
+                Terminal.print(cc);
+                cmd_buffer[cmd_buffer_l] = c;
+                cmd_buffer_l++;
+            }
         }
-        key = Keyboard.readKey(true);
+        event = Keyboard.readEvent(true);
     }
 }

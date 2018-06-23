@@ -27,8 +27,13 @@ _start:
 	call kernel_main
 	cli
 
-_end:	
+_end:
 	hlt
 	jmp _end
 
 .size _start, . - _start
+
+.section .sizedetect
+.global ASM_KERNEL_END
+ASM_KERNEL_END:
+	# Kernel size detecting

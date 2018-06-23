@@ -1,5 +1,5 @@
 # <-- MemeOS Makefile -->
-# Copyright xX_WhatsTheGeek_Xx (c)
+# Copyright xX_WhatsTheGeek_Xx (c) 2018
 
 # CONFIGURATION
 DELETE = rm -f 
@@ -26,7 +26,7 @@ ASM_OBJ = $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_SRC)) $(patsubst $(LI
 GPP_CMD = i686-elf-g++
 GAS_CMD = i686-elf-as
 LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wwrite-strings
-CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar -Wno-unused-parameter -Wno-overflow
+CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar -Wno-unused-parameter -Wno-overflow -Wno-narrowing
 CXXFLAGS = 
 GASFLAGS = 
 OBJ_FILES = $(CPP_OBJ) $(ASM_OBJ)

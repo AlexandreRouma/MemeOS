@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "speaker.h"
-#include "io.h"
-#include "pit.h"
+#include <speaker.h>
+#include <io.h>
+#include <pit.h>
 
 Speaker_Class Speaker;
 

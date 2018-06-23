@@ -41,3 +41,27 @@ char* dumpHexByte(uint8_t n) {
     rtn[0] = HEX_ALPHABET[(n & 0xF0) >> 4];
     return rtn;
 }
+
+uint32_t strcnt(const char* str, char c) {
+	uint32_t count = 0;
+	for (uint32_t i = 0; i < strlen(str); i++) {
+		if (str[i] == c) {
+			count++;
+		}
+	}
+	return count;
+}
+
+int strfio(const char* str, char c) {
+	uint32_t index = 0;
+	for (uint32_t i = 0; i < strlen(str); i++) {
+		if (str[i] == c) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+char* substr(char* str, uint32_t index) {
+	return str + index;
+}

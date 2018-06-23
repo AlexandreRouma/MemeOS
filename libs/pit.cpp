@@ -1,7 +1,6 @@
-#include "io.h"
-#include "pit.h"
-#include "string.h"
-#include "terminal.h"
+#include <io.h>
+#include <pit.h>
+#include <string.h>
 
 PIT_Class PIT;
 

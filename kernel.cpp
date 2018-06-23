@@ -1,16 +1,17 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "terminal.h"
-#include "io.h"
-#include "gdt.h"
-#include "idt.h"
-#include "pic.h"
-#include "pit.h"
-#include "speaker.h"
-#include "string.h"
-#include "panic.h"
-#include "keyboard.h"
-#include "multiboot.h"
+#include <terminal.h>
+#include <io.h>
+#include <gdt.h>
+#include <idt.h>
+#include <pic.h>
+#include <pit.h>
+#include <speaker.h>
+#include <string.h>
+#include <panic.h>
+#include <keyboard.h>
+#include <multiboot.h>
+#include <paging.h>
 #include "shell/shell.h"
 
 extern "C" // Use C link for kernel_main
@@ -26,7 +27,11 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         kernel_panic(0x0000, "Invalid multiboot signature !");
     }
 
-    Terminal.println("Welcome to MemeOS ! (DEBUG 12)");
+    Terminal.print("Welcome to MemeOS ! Kernel End: 0x");
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 24));
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 16));
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 8));
+    Terminal.println(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 0));
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...           ");
@@ -45,8 +50,12 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     PIT.Init();
     Terminal.OK();
 
+    Terminal.print("Enabling paging...       ");
+    Paging.enable();
+    Terminal.OK();
+
     Terminal.print("Initialising Keyboard... ");
-    PIT.Init();
+    Keyboard.Init();
     Terminal.OK();
 
     asm("sti");

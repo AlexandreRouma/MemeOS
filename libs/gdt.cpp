@@ -1,12 +1,12 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "gdt.h"
+#include <gdt.h>
 
 #define GDT_ENTRY_COUNT 3
 
 GDT_Class GDT;
 
-uint8_t _GDT[GDT_ENTRY_COUNT * 8];
+char _GDT[GDT_ENTRY_COUNT * 8];
 
 void lgdt(void* base, uint16_t size)
 {   // This function works in 32 and 64bit mode
@@ -18,7 +18,7 @@ void lgdt(void* base, uint16_t size)
     asm ( "lgdt %0" : : "m"(GDTR) );  // let the compiler choose an addressing mode
 }
 
-void encodeGdtEntry(uint8_t *target, uint32_t base, uint32_t limit, uint8_t type)
+void encodeGdtEntry(char* target, uint32_t base, uint32_t limit, uint8_t type)
 {
     target[6] = 0xC0;
  

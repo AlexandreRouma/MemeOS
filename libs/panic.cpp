@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "panic.h"
-#include "terminal.h"
-#include "string.h"
+#include <panic.h>
+#include <terminal.h>
+#include <string.h>
 
 void kernel_panic(uint16_t error_code, char* message) {
     asm("cli");
