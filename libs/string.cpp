@@ -42,6 +42,29 @@ char* dumpHexByte(uint8_t n) {
     return rtn;
 }
 
+void itoa(char* buffer, uint32_t n, uint8_t size) {
+	for (uint8_t i = 0; i < size; i++) {
+		buffer[i] = 0x00;
+	}
+	buffer[0] = 0;
+	char flipper[12];
+	flipper[0] = '0';
+	uint32_t i = 0;
+	while (n > 0) {
+		uint32_t mul = 10;
+		for (uint32_t j = 0; j < i; j++) {
+			mul *= 10;
+		}
+		uint8_t digit = n % mul;
+		n -= mul;
+		flipper[i] = HEX_ALPHABET[digit];
+		i++;
+	}
+	for (uint8_t j = 0; j < i; j++) {
+		buffer[i - j - 1] = flipper[j];
+	}
+}
+
 uint32_t strcnt(const char* str, char c) {
 	uint32_t count = 0;
 	for (uint32_t i = 0; i < strlen(str); i++) {

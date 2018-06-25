@@ -8,7 +8,7 @@ void kernel_panic(uint16_t error_code, char* message) {
     Terminal.hideCursor();
     Terminal.setColor(0x4F);
     Terminal.clear();
-    Terminal.setColor(0xF4);
+    Terminal.setColor(0x70);
     for (int x = 0; x < Terminal.getWidth(); x++) {
         Terminal.putcar(' ', x, 0);
     }

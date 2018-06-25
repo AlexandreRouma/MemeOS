@@ -32,4 +32,5 @@ struct MultibootInfo_t{
 extern "C" 
 {
     extern void ASM_KERNEL_END(void);
+    extern void stack_top(void);
 }

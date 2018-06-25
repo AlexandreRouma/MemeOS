@@ -1,4 +1,13 @@
 {
     "C_Cpp.intelliSenseEngineFallback": "Enabled",
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "*.php": "html",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp"
+    }
 }

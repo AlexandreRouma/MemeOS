@@ -2,14 +2,13 @@
 #include <stdint.h>
 #include <gdt.h>
 
-#define GDT_ENTRY_COUNT 3
+#define GDT_ENTRY_COUNT 256
 
 GDT_Class GDT;
 
 char _GDT[GDT_ENTRY_COUNT * 8];
 
-void lgdt(void* base, uint16_t size)
-{   // This function works in 32 and 64bit mode
+void lgdt(void* base, uint16_t size) {   // This function works in 32 and 64bit mode
     struct {
         uint16_t length;
         void*    base;
@@ -18,8 +17,9 @@ void lgdt(void* base, uint16_t size)
     asm ( "lgdt %0" : : "m"(GDTR) );  // let the compiler choose an addressing mode
 }
 
-void encodeGdtEntry(char* target, uint32_t base, uint32_t limit, uint8_t type)
-{
+void encodeGdtEntry(uint32_t index, uint32_t base, uint32_t limit, uint8_t type) {
+    char* target = &_GDT[index * 8];
+
     target[6] = 0xC0;
  
     // Encode the limit
@@ -39,9 +39,15 @@ void encodeGdtEntry(char* target, uint32_t base, uint32_t limit, uint8_t type)
 
 void GDT_Class::load() {
     asm("cli");
-    encodeGdtEntry(&_GDT[0], 0, 0, 0);  // Null descriptor
-    encodeGdtEntry(&_GDT[8], 0, 0xFFFFFFFF, 0x9A);
-    encodeGdtEntry(&_GDT[16], 0, 0xFFFFFFFF, 0x92);
+    encodeGdtEntry(0x00, 0x00000000, 0x00000000, 0x00); // Null descriptor
+    encodeGdtEntry(0x01, 0x00000000, 0xFFFFFFFF, 0x9A); // Code
+    encodeGdtEntry(0x02, 0x00000000, 0xFFFFFFFF, 0x92); // Data
+    encodeGdtEntry(0x03, 0x00000000, 0x00000000, 0x96); // Stack
+
     lgdt(&_GDT, sizeof(_GDT));
     ASM_RELOAD_SEGMENTS();
+}
+
+void GDT_Class::setGDTEntry(uint32_t index, uint32_t base, uint32_t limit, uint8_t type) {
+    encodeGdtEntry(index, base, limit, type);
 }

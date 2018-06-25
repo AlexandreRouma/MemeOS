@@ -16,22 +16,9 @@
 #include <std/stdio.h>
 #include <syscalls.h>
 
-char* logo = "       ______        \n"
-            "  .---<__. \\ \\        \n"
-    "  `---._  \\ \\ \\    \n"
-    "   ,----`- `.))    \n"
-    "  / ,--.   )  |    \n"
-    " /_/    >     |    \n"
-    " |,\\__-'      |    \n"
-    "  \\_           \\    \n"
-    "    ~~-___      )    \n"
-    "          \\      \\    ";
-
 void shell_main() {
-    Terminal.setColor(0x0E);
-    Terminal.println(logo);
     Terminal.setColor(0x02);
-    Terminal.print("\n\nWelcome to the MemeOS Shell !\n\n");
+    Terminal.println("\nDankBASH v1.1, logged in as root.\n");
     Terminal.setColor(0x07);
     Terminal.showCursor(2);
 
@@ -106,7 +93,6 @@ void shell_main() {
         }
         else if (strcmp("syscall", cmd_str)) {
             syscall(1, 2, 3, 4);
-            printf("gfy", 0x00);
         }
         else if (strcmp("crash", cmd_str)) {
             kernel_panic(0x4269, "Self triggered crash, no real exception here !");
@@ -122,8 +108,4 @@ void shell_main() {
 
         free((uint32_t)cmd_str);
     }
-}
-
-void task(void) {
-    printf("gfy");
 }

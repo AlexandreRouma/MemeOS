@@ -15,14 +15,14 @@ struct regs
     unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
 };
 
-char *exception_messages[] =
-{
+char *exception_messages[] ={
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
     "Break Point",
     "Into Detect Overflow",
     "Out of bounds Exception",
+    "Invalid Opcode",
     "No Coprocessor",
     "Double Fault",
     "Coprocessor Segment Overrun",
@@ -71,7 +71,6 @@ extern "C"
     }
 
     void _fault_handler(struct regs *r) {
-        /* Is this a fault whose number is from 0 to 31? */
         if (r->int_no < 32)
         {
             kernel_panic(r->int_no, exception_messages[r->int_no]);

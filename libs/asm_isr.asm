@@ -208,22 +208,22 @@ isr_common_stub:
     push %es
     push %fs
     push %gs
-    mov $0x10, %ax
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %fs
-    mov %ax, %gs
-    mov %esp, %eax
-    push %eax
-    mov _fault_handler, %eax
+    movw $0x10,%ax
+    movw %ax,%ds
+    movw %ax,%es
+    movw %ax,%fs
+    movw %ax,%gs
+    movl %esp,%eax
+    pushl %eax
+    movl $_fault_handler, %eax
     call *%eax
-    pop %eax
-    pop %gs
-    pop %fs
-    pop %es
-    pop %ds
+    popl %eax
+    popl %gs
+    popl %fs
+    popl %es
+    popl %ds
     popa
-    add $8, %esp
+    addl $8,%esp
     iret
 
 .global ASM_ISR_0

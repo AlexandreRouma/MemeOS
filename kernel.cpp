@@ -24,14 +24,10 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Terminal.clear();
 
     if (multiboot_magic != 0x2BADB002) {
-        kernel_panic(0x0000, "Invalid multiboot signature !");
+        kernel_panic(0xFFFF, "Invalid multiboot signature !");
     }
 
-    Terminal.print("Welcome to MemeOS ! Kernel End: 0x");
-    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 24));
-    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 16));
-    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 8));
-    Terminal.println(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 0));
+    Terminal.println("Welcome to MemeOS v1.4 !");
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...           ");
@@ -50,16 +46,63 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     PIT.Init();
     Terminal.OK();
 
-    Terminal.print("Enabling paging...       ");
-    Paging.enable();
-    Terminal.OK();
-
     Terminal.print("Initialising Keyboard... ");
     Keyboard.Init();
     Terminal.OK();
 
     asm("sti");
 
+    Terminal.print("Enabling paging...       ");
+    //Paging.enable();
+    Terminal.OK();
+
+    uint32_t RSDPTR = 0x00000000;
+    char* RSDSIG = "RSD PTR ";
+    char* RAMPTR = 0x00000000;
+
+    for (uint32_t i = 0; i < 0x100000; i++) {
+        uint8_t match = 0;
+        for (uint8_t j = 0; j < 8; j++) {
+            if (RAMPTR[i + j] == RSDSIG[j]) {
+                match++;
+            }
+        }
+        if (match >= 8) {
+            RSDPTR = i;
+            break;
+        }
+    }
+
+    Terminal.setColor(0x03);
+
+    Terminal.println("");
+
+    Terminal.print("Kernel end:   0x");
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 24));
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 16));
+    Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 8));
+    Terminal.println(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 0));
+
+    Terminal.print("Memory size:  0x");
+    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 24));
+    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 16));
+    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 8));
+    Terminal.println(dumpHexByte((multiboot_info->mem_upper * 1024) >> 0));
+
+    Terminal.print("Stack top:    0x");
+    Terminal.print(dumpHexByte((uint32_t)stack_top >> 24));
+    Terminal.print(dumpHexByte((uint32_t)stack_top >> 16));
+    Terminal.print(dumpHexByte((uint32_t)stack_top >> 8));
+    Terminal.println(dumpHexByte((uint32_t)stack_top >> 0));
+
+    Terminal.print("RSDPTR:       0x");
+    Terminal.print(dumpHexByte(RSDPTR >> 24));
+    Terminal.print(dumpHexByte(RSDPTR >> 16));
+    Terminal.print(dumpHexByte(RSDPTR >> 8));
+    Terminal.println(dumpHexByte(RSDPTR >> 0));
+
+    Terminal.setColor(0x07);
+    
     shell_main();
 
     for (;;) {

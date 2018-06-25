@@ -7,6 +7,10 @@ class Paging_Class {
         uint32_t getPhysicalAddr(uint32_t virt);
         uint16_t getFlags(uint32_t virt);
         void setFlags(uint32_t virt, uint16_t flags);
+        void setPresent(uint32_t virt, uint32_t count);
+        void setAbsent(uint32_t virt, uint32_t count);
+        uint32_t findPages(uint32_t count);
+        uint32_t allocPages(uint32_t count);
 };
 
 extern "C" 
