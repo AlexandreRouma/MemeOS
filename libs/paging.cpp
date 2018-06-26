@@ -41,7 +41,7 @@ void Paging_Class::enable() {
     initPageTables();
     initPageTable();
     fillPageDirectory();
-    setPresent(0, ((uint32_t)ASM_KERNEL_END / 4096) + 1); // Allocate for the kernel
+    setPresent(0, ((uint32_t)ASM_KERNEL_END / 4096) + 4); // Allocate for the kernel
     ASM_LOAD_PAGE_DIRECTORY(page_directory);
     ASM_ENABLE_PAGING();
 }
@@ -69,6 +69,17 @@ void Paging_Class::setFlags(uint32_t virt, uint16_t flags) {
     uint32_t pti = virt >> 12 & 0x03FF;
     page_tables[pdi][pti] &= 0xFFFFF000;
     page_tables[pdi][pti] |= flags;
+}
+
+uint16_t Paging_Class::getDirectoryFlags(uint32_t virt) {
+    uint32_t pdi = virt >> 22;
+    return page_directory[pdi] & 0xFFF;
+}
+
+void Paging_Class::setDirectoryFlags(uint32_t virt, uint16_t flags) {
+    uint32_t pdi = virt >> 22;
+    page_directory[pdi] &= 0xFFFFF000;
+    page_directory[pdi] |= flags;
 }
 
 void Paging_Class::setPresent(uint32_t virt, uint32_t count) {
@@ -109,12 +120,12 @@ uint32_t Paging_Class::findPages(uint32_t count) {
     uint32_t continous = 0;
     for (uint32_t i = 0; i < 1024; i++) {
         for (uint32_t j = 0; j < 1024; j++) {
-            bool free = !(page_tables[i][j] & 1);
-            if (free) {
+            uint8_t free = !(page_tables[i][j] & 1);
+            if (free == 1) {
                 continous++;
             }
             if (continous >= count) {
-                return (i * 0x400000) + (i * 0x1000) - (count * 0x1000);
+                return (i * 0x400000) + (j * 0x1000) - (count * 0x1000);
             }
         }
     }
@@ -125,6 +136,5 @@ uint32_t Paging_Class::findPages(uint32_t count) {
 uint32_t Paging_Class::allocPages(uint32_t count) {
     uint32_t ptr = findPages(count);
     setPresent(ptr, count);
-    kernel_panic(0xF0CC, "Out of memory :/");
-    return 0;
+    return ptr;
 }

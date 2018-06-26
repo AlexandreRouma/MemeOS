@@ -228,18 +228,55 @@ isr_common_stub:
 
 .global ASM_ISR_0
 ASM_ISR_0:
-    pushal;
+    # pushal;
+
+    pusha
+    push %ds
+    push %es
+    push %fs
+    push %gs
+    pushl %ebx
+    movw $0x08,%bx
+    movw %bx,%ds
+    popl %ebx
+
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     call ISR_0
-    popal;
+
+    popl %gs
+    popl %fs
+    popl %es
+    popl %ds
+    popa
+
+    # popal;
     iret
 
 .global ASM_ISR_PIT
 ASM_ISR_PIT:
-    pushal;
+    pushal
+    # push %ds
+    # push %es
+    # push %fs
+    # push %gs
+    # pushl %ebx
+    # movw $0x10,%bx
+    # movw %bx,%ds
+    # popl %ebx
+
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     call ISR_PIT
-    popal;
+
+    # popl %gs
+    # popl %fs
+    # popl %es
+    # pushl %ds
+    # popl %ds
+
+    pushw %ds
+    popw %ds
+
+    popal
     iret
 
 .global ASM_ISR_KBD

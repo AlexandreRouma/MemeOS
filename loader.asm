@@ -13,16 +13,17 @@
 
 .section .bss
 .align 16
-.global stack_top
-stack_bottom:
+.global ASM_STACK_BOTTOM
+.global ASM_STACK_TOP
+ASM_STACK_BOTTOM:
 .skip 16384 # 16 KiB
-stack_top:
+ASM_STACK_TOP:
 
 .section .text
 .global _start
 .type _start, @function
 _start:
-	mov $stack_top, %esp
+	mov $ASM_STACK_TOP, %esp
 	push %ebx
 	push %eax
 	call kernel_main

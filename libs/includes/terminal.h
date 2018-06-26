@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 
 class Terminal_Class {
     public:
@@ -21,7 +22,7 @@ class Terminal_Class {
         uint8_t getHeight();
         uint8_t getCursorX();
         uint8_t getCursorY();
-        void readLine(char* buffer);
+        string readLine();
 };
 
 extern Terminal_Class Terminal;

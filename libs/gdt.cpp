@@ -1,6 +1,7 @@
-#include <stddef.h>
+#include <multiboot.h>
 #include <stdint.h>
 #include <gdt.h>
+#include <tss.h>
 
 #define GDT_ENTRY_COUNT 256
 
@@ -20,7 +21,7 @@ void lgdt(void* base, uint16_t size) {   // This function works in 32 and 64bit 
 void encodeGdtEntry(uint32_t index, uint32_t base, uint32_t limit, uint8_t type) {
     char* target = &_GDT[index * 8];
 
-    target[6] = 0xC0;
+    target[6] = 0xD0;
  
     // Encode the limit
     target[0] = limit & 0xFF;
@@ -43,9 +44,24 @@ void GDT_Class::load() {
     encodeGdtEntry(0x01, 0x00000000, 0xFFFFFFFF, 0x9A); // Code
     encodeGdtEntry(0x02, 0x00000000, 0xFFFFFFFF, 0x92); // Data
     encodeGdtEntry(0x03, 0x00000000, 0x00000000, 0x96); // Stack
+    
+    // Define task segments
+    GDT.setGDTEntry(0x04, 0x01001000, 0x00000000, 0xFF); // ucode
+    GDT.setGDTEntry(0x05, 0x01001000, 0x00000000, 0xF3); // udata
+    GDT.setGDTEntry(0x06, 0x00000000, 0x00000020, 0xF7); // ustack
+    
+    initTss();
+
+    encodeGdtEntry(0x07, (uint32_t)&kernel_tss, 0x67, 0xE9);
 
     lgdt(&_GDT, sizeof(_GDT));
     ASM_RELOAD_SEGMENTS();
+
+    asm("  movw $0x38, %ax \n \
+            ltr %ax");
+
+    asm("  movw %%ss, %0 \n \
+            movl %%esp, %1" : "=m" (kernel_tss.ss0), "=m" (kernel_tss.esp0) : );
 }
 
 void GDT_Class::setGDTEntry(uint32_t index, uint32_t base, uint32_t limit, uint8_t type) {

@@ -6,6 +6,8 @@
 #include <panic.h>
 #include <syscalls.h>
 
+#define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
+
 /* This defines what the stack looks like after an ISR was running */
 struct regs
 {
@@ -73,7 +75,7 @@ extern "C"
     void _fault_handler(struct regs *r) {
         if (r->int_no < 32)
         {
-            kernel_panic(r->int_no, exception_messages[r->int_no]);
+            kernel_panic(r->err_code, exception_messages[r->int_no]);
             for (;;);
         }
     }

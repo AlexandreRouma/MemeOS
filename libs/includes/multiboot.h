@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 struct MultibootInfo_t{
     uint32_t flags;
     uint32_t mem_lower;
@@ -32,5 +34,6 @@ struct MultibootInfo_t{
 extern "C" 
 {
     extern void ASM_KERNEL_END(void);
-    extern void stack_top(void);
+    extern void ASM_STACK_BOTTOM(void);
+    extern void ASM_STACK_TOP(void);
 }

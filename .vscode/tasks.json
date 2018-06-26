@@ -44,7 +44,7 @@
         {
             "label": "Run in BOCHS (Rqrs. ISO)",
             "type": "shell",
-            "command": "&('C:/Program Files (x86)/Bochs-2.6.9/bochs.exe') -f bochsrc.bxrc -q",
+            "command": "&('C:/Program Files (x86)/Bochs-2.6.9/bochsdbg.exe') -f bochsrc.bxrc -q",
             "group": {
                 "kind": "test",
                 "isDefault": true

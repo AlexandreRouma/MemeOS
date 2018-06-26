@@ -19,6 +19,8 @@ void kernel_panic(uint16_t error_code, char* message) {
     Terminal.print("KERNEL PANIC");
     Terminal.setCursor(0, Terminal.getHeight() - 1);
     Terminal.print("ERROR CODE: 0x");
+    Terminal.print(dumpHexByte((error_code >> 24) & 0xFF));
+    Terminal.print(dumpHexByte((error_code >> 16) & 0xFF));
     Terminal.print(dumpHexByte((error_code >> 8) & 0xFF));
     Terminal.print(dumpHexByte(error_code & 0xFF));
     Terminal.setColor(0x4F);

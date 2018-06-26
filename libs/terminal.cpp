@@ -187,8 +187,8 @@ uint8_t Terminal_Class::getCursorY() {
     return cursor_y;
 }
 
-void Terminal_Class::readLine(char* cmd_buffer) {
-    uint16_t cmd_buffer_l = 0;
+string Terminal_Class::readLine() {
+    string ret = "";
     int backspaceXmax = Terminal.getCursorX();
     int backspaceYmax = Terminal.getCursorY();
     KeyboardEvent_t event = Keyboard.readEvent(true);
@@ -201,8 +201,7 @@ void Terminal_Class::readLine(char* cmd_buffer) {
                 cx--;
                 Terminal.putcar(' ', cx, cy);
                 Terminal.setCursor(cx, cy);
-                cmd_buffer_l--;
-                cmd_buffer[cmd_buffer_l] = 0x00;
+                ret = ret.substring(0, ret.length() - 1);
             }
         }
         else if (event.type == Keyboard.EVENTTYPES.PRESSED) {
@@ -211,10 +210,10 @@ void Terminal_Class::readLine(char* cmd_buffer) {
                 char* cc = " ";
                 cc[0] = c;
                 Terminal.print(cc);
-                cmd_buffer[cmd_buffer_l] = c;
-                cmd_buffer_l++;
+                ret += c;
             }
         }
         event = Keyboard.readEvent(true);
     }
+    return ret;
 }

@@ -1,4 +1,3 @@
-#include <stddef.h>
 #include <stdint.h>
 #include <terminal.h>
 #include <io.h>
@@ -14,6 +13,8 @@
 #include <paging.h>
 #include "shell/shell.h"
 
+#define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
+
 extern "C" // Use C link for kernel_main
 
 void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info) 
@@ -27,7 +28,7 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         kernel_panic(0xFFFF, "Invalid multiboot signature !");
     }
 
-    Terminal.println("Welcome to MemeOS v1.4 !");
+    Terminal.println("Welcome to MemeOS v1.5 !");
     Terminal.setColor(0x07);
 
     Terminal.print("Loading GDT...           ");
@@ -50,11 +51,13 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Keyboard.Init();
     Terminal.OK();
 
-    asm("sti");
-
     Terminal.print("Enabling paging...       ");
-    //Paging.enable();
+    Paging.enable();
     Terminal.OK();
+
+    BochsBreak();
+
+    asm("sti");
 
     uint32_t RSDPTR = 0x00000000;
     char* RSDSIG = "RSD PTR ";
@@ -90,10 +93,10 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Terminal.println(dumpHexByte((multiboot_info->mem_upper * 1024) >> 0));
 
     Terminal.print("Stack top:    0x");
-    Terminal.print(dumpHexByte((uint32_t)stack_top >> 24));
-    Terminal.print(dumpHexByte((uint32_t)stack_top >> 16));
-    Terminal.print(dumpHexByte((uint32_t)stack_top >> 8));
-    Terminal.println(dumpHexByte((uint32_t)stack_top >> 0));
+    Terminal.print(dumpHexByte((uint32_t)ASM_STACK_TOP >> 24));
+    Terminal.print(dumpHexByte((uint32_t)ASM_STACK_TOP >> 16));
+    Terminal.print(dumpHexByte((uint32_t)ASM_STACK_TOP >> 8));
+    Terminal.println(dumpHexByte((uint32_t)ASM_STACK_TOP >> 0));
 
     Terminal.print("RSDPTR:       0x");
     Terminal.print(dumpHexByte(RSDPTR >> 24));

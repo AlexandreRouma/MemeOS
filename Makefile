@@ -23,10 +23,11 @@ ASM_LIB = $(wildcard $(LIB_DIR)/*.asm)
 ASM_OBJ = $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_SRC)) $(patsubst $(LIB_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ASM_LIB))
 
 # COMPILER STUFF
+# unused: -Wall -Wextra
 GPP_CMD = i686-elf-g++
 GAS_CMD = i686-elf-as
 LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib -lgcc -Wwrite-strings
-CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -Wall -Wextra -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar -Wno-unused-parameter -Wno-overflow -Wno-narrowing
+CPPFLAGS = -I $(INC_DIR) -ffreestanding -O2 -fno-rtti -Wno-write-strings -Wno-unused-variable -Wno-multichar -Wno-unused-parameter -Wno-overflow -Wno-narrowing -fno-exceptions
 CXXFLAGS = 
 GASFLAGS = 
 OBJ_FILES = $(CPP_OBJ) $(ASM_OBJ)

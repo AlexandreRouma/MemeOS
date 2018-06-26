@@ -10,11 +10,18 @@
 #include <multiboot.h>
 #include <terminal.h>
 #include <serial.h>
-#include <memory.h>
+#include <liballoc.h>
 #include <time.h>
 #include <paging.h>
 #include <std/stdio.h>
 #include <syscalls.h>
+
+#define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
+
+void task1(void) {
+    while(1);
+    return;
+}
 
 void shell_main() {
     Terminal.setColor(0x02);
@@ -22,55 +29,36 @@ void shell_main() {
     Terminal.setColor(0x07);
     Terminal.showCursor(2);
 
-    char* testpointer = malloc(1);
-
     while (true) {
         Terminal.setColor(0x09);
         Terminal.print("MemeOS");
         Terminal.setColor(0x07);
         Terminal.print("> ");
 
-        // char buffer[1024];                  // Make space for text
-        // for (int i = 0; i < 1024; i++) {    // Clear the buffer
-        //     buffer[i] = 0x00;
-        // }
-        char* cmd_str = calloc(1024);// = (char*)&buffer;     // Create a char pointer
-        Terminal.readLine(cmd_str);         // Read the keys
-        uint16_t cmd_lng = strlen(cmd_str); // Get the length
+        string cmd_str = Terminal.readLine();
 
         Terminal.println("");
 
-        if (cmd_lng == 0) {
+        if (cmd_str == "") {
             // Nothing
         }
-        else if (strcmp("ping", cmd_str)) {
+        else if (cmd_str.startsWith("echo")) {
+            if (cmd_str.length() > 5) {
+                Terminal.println(cmd_str.substring(5));
+            }
+            else {
+                Terminal.setColor(0x04);
+                Terminal.println("No argument !");
+                Terminal.setColor(0x07);
+            }
+        }
+        else if (cmd_str == "ping") {
             Terminal.println("Pong !");
         }
-        else if (strcmp("clear", cmd_str)) {
+        else if (cmd_str == "clear") {
             Terminal.clear();
         }
-        else if (strcmp("memstats", cmd_str)) {
-            uint32_t usedmem = memused();
-            uint32_t freemem = memfree();
-            uint32_t totalmem = freemem + usedmem;
-            Terminal.print(dumpHexByte((usedmem >> 24) & 0xFF));
-            Terminal.print(dumpHexByte((usedmem >> 16) & 0xFF));
-            Terminal.print(dumpHexByte((usedmem >> 8) & 0xFF));
-            Terminal.print(dumpHexByte(usedmem & 0xFF));
-            Terminal.print(" used - ");
-            Terminal.print(dumpHexByte((freemem >> 24) & 0xFF));
-            Terminal.print(dumpHexByte((freemem >> 16) & 0xFF));
-            Terminal.print(dumpHexByte((freemem >> 8) & 0xFF));
-            Terminal.print(dumpHexByte(freemem & 0xFF));
-            Terminal.print(" free - ");
-            Terminal.print(dumpHexByte((totalmem >> 24) & 0xFF));
-            Terminal.print(dumpHexByte((totalmem >> 16) & 0xFF));
-            Terminal.print(dumpHexByte((totalmem >> 8) & 0xFF));
-            Terminal.print(dumpHexByte(totalmem & 0xFF));
-            Terminal.println(" total");
-            free((uint32_t)testpointer);
-        }
-        else if (strcmp("time", cmd_str)) {
+        else if (cmd_str == "time") {
             Time_t time = Time.getTime();
             Terminal.print(dumpHexByte(time.hours));
             Terminal.print(":");
@@ -83,7 +71,7 @@ void shell_main() {
             Terminal.print("/");
             Terminal.println(dumpHexByte(time.year));
         }
-        else if (strcmp("reboot", cmd_str)) {
+        else if (cmd_str == "reboot") {
             uint8_t good = 0x02;
             while (good & 0x02) {
                 good = inb(0x64);
@@ -91,11 +79,49 @@ void shell_main() {
             outb(0x64, 0xFE);
             asm("hlt");
         }
-        else if (strcmp("syscall", cmd_str)) {
+        else if (cmd_str == "syscall") {
             syscall(1, 2, 3, 4);
         }
-        else if (strcmp("crash", cmd_str)) {
+        else if (cmd_str == "crash") {
             kernel_panic(0x4269, "Self triggered crash, no real exception here !");
+        }
+        else if (cmd_str == "task") {
+            // Task map:
+            // 0xF0000000 - 0xF0001000 => ustack
+            // 0xF0001000 - 0xF0002000 => ucode, udata
+
+            // Allocate pages
+            //Paging.setPresent(0xEFFFF000, 1); // ustack
+            Paging.setPresent(0x01000000, 1); // ustack
+            Paging.setPresent(0x01001000, 1); // ucode
+            //Paging.setPresent(0xF0002000, 1); // ucode
+
+            Paging.setDirectoryFlags(0x01000000, 0x07);
+            Paging.setDirectoryFlags(0x01001000, 0x07);
+            Paging.setFlags(0x01000000, 0x07);
+            Paging.setFlags(0x01001000, 0x07);
+
+            // Load task
+            memmove((void*)0x01001000, (void*)&task1, 0xFFF);
+
+            BochsBreak();
+
+            uint32_t st = (uint32_t)&ASM_STACK_TOP;
+
+            asm("   cli \n \
+                    push $0x33 \n \
+                    push $0x01001000 \n \
+                    pushfl \n \
+                    popl %%eax \n \
+                    orl $0x200, %%eax \n \
+                    and $0xffffbfff, %%eax \n \
+                    push %%eax \n \
+                    push $0x23 \n \
+                    push $0x0 \n \
+                    movl $ASM_STACK_TOP, %0 \n \
+                    movw $0x2B, %%ax \n \
+                    movw %%ax, %%ds \n \
+                    iret" : "=m" (st) : );
         }
         else {
             Terminal.setColor(0x04);
@@ -103,9 +129,6 @@ void shell_main() {
             Terminal.print(cmd_str);
             Terminal.println("'");
             Terminal.setColor(0x07);
-            uint32_t ptr = (uint32_t)cmd_str;
         }
-
-        free((uint32_t)cmd_str);
     }
 }
