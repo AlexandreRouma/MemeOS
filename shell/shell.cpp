@@ -60,15 +60,28 @@ void shell_main() {
             Terminal.clear();
         }
         else if (cmd_str == "rapemem") {
-            while (1) {
-                void* ptr = malloc(1);
-                //free(ptr);
-                Terminal.print("Alloc:       0x");
-                Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
-                Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
-                Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
-                Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
+            void* ptr = malloc(1);
+            free(ptr);
+            Terminal.print("Alloc 1:       0x");
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
+            Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
+
+            for (int i = 0; i < 2; i++) {
+                string a = "ur mom gay";
+                a += "LOL";
+                string b = "a";
+                b += a;
             }
+
+            ptr = malloc(1);
+            free(ptr);
+            Terminal.print("Alloc 2:       0x");
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
+            Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
+            Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
         }
         else if (cmd_str == "time") {
             Time_t time = Time.getTime();
@@ -141,7 +154,7 @@ void shell_main() {
         else {
             Terminal.setColor(0x04);
             Terminal.print("Unknown command: '");
-            Terminal.print(cmd_str);
+            //Terminal.print(cmd_str);
             Terminal.println("'");
             Terminal.setColor(0x07);
         }

@@ -80,67 +80,59 @@ char* substr(char* str, uint32_t index) {
 	return str + index;
 }
 
+// <=============================== STRING CLASS ===============================>
+
 string::string(char* str) {
-    this->_str = (char*)malloc(strlen(str) + 1);
-	for (uint32_t i = 0; i < strlen(str) + 1; i++) {
-		this->_str[i] = str[i];
-	}
+	this->_length = strlen(str);
+	this->_str = (char*)malloc(this->_length + 1);
+	memmove(this->_str, str, this->_length);
+	this->_str[this->_length] = 0x00;
 }
 
 string::string() {
-    this->_str = (char*)malloc(1);
+	this->_length = 0;
+	this->_str = (char*)malloc(1);
 	this->_str[0] = 0x00;
 }
 
 string::~string() {
+	this->_length = 0;
 	free(this->_str);
-}
-
-char* string::toCharArray() {
-	return this->_str;
-}
-
-uint32_t string::length() {
-	return strlen(this->_str);
-}
-
-void string::reserve(uint32_t len) {
-	uint32_t old_len = this->length();
-	this->_str = (char*)realloc(this->_str, len + 1);
-	if (len < old_len) {
-		this->_str[len] = 0x00;
-	}
-	else {
-		for (uint32_t i = old_len; i < len + 1; i++) {
-			this->_str[i] = 0x00;
-		}
-	}
 }
 
 string string::operator+(string str) {
 	string ret;
-	ret.reserve(this->length() + str.length());
-	memmove(ret.toCharArray(), this->toCharArray(), this->length());
-	memmove(ret.toCharArray() + this->length(), str.toCharArray(), str.length() + 1);
+	ret = this->toCharArray();
+	ret += str;
 	return ret;
 }
 
 string string::operator+(char c) {
 	string ret;
-	ret.reserve(this->length() + 1);
-	memmove(ret.toCharArray(), this->toCharArray(), this->length());
-	ret.toCharArray()[this->length()] = c;
+	ret = this->toCharArray();
+	ret += c;
 	return ret;
 }
 
 void string::operator+=(string str) {
-	this->reserve(this->length() + str.length());
-	memmove(this->toCharArray() + this->length(), str.toCharArray(), str.length() + 1);
+	this->_str = (char*)realloc(this->_str, this->_length + str.length() + 1);
+	memmove(this->_str + this->_length, str.toCharArray(), str.length());
+	this->_str[this->_length + str.length()] = 0x00;
+	this->_length += str.length();
 }
 
 void string::operator+=(char c) {
-	this->reserve(this->length() + 1);
-	this->toCharArray()[this->length()] = c;
+	this->_str = (char*)realloc(this->_str, this->_length + 2);
+	this->_str[this->_length] = c;
+	this->_str[this->_length + 1] = 0x00;
+	this->_length++;
+}
+
+char string::operator[](uint32_t i) {
+	if (i < this->_length) {
+		return this->_str[i];
+	}
+	return 0x00;
 }
 
 bool string::operator==(string str) {
@@ -159,66 +151,45 @@ bool string::operator!=(char* str) {
 	return !strcmp(this->_str, str);
 }
 
-char string::operator[](uint32_t i) {
-	return this->_str[i];
+uint32_t string::length() {
+	return this->_length;
+}
+
+char* string::toCharArray() {
+	return this->_str;
+}
+
+void string::reserve(uint32_t len) {
+	if (len > this->_length) {
+		this->_str = (char*)realloc(this->_str, len + 1);
+	}
 }
 
 string string::substring(uint32_t index) {
 	string ret;
-	ret.reserve(this->length() - index);
-	memmove(ret.toCharArray(), this->toCharArray() + index, this->length() - index);
+	if (index < this->_length) {
+		ret = (this->toCharArray() + index);
+	}
 	return ret;
 }
 
 string string::substring(uint32_t index, uint32_t length) {
-	string ret;
-	ret.reserve(this->length() - index - (this->length() - index - length));
-	memmove(ret.toCharArray(), this->toCharArray() + index, this->length() - index - (this->length() - index - length));
-	return ret;
+	string out;
+	out.reserve(length);
+    for (uint32_t i = index; i < index + length; i++) {
+        out += this->_str[i];
+    }
+    return out;
 }
 
 bool string::startsWith(string str) {
+	if (str.length() > this->_length) {
+		return false;
+	}
 	for (uint32_t i = 0; i < str.length(); i++) {
-		if (str[i] != this->_str[i]) {
-			return false;
-		}
+		if (this->_str[i] != str[i]);
 	}
 	return true;
 }
 
-bool string::endWith(string str) {
-	for (int i = str.length() - 1; i > -1; i--) {
-		if (str[i] != this->_str[this->length() - str.length() + i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
-string string::toUpper() {
-	string ret;
-	ret.reserve(this->length());
-	char* ptr = ret.toCharArray();
-	for (uint32_t i = 0; i < this->length(); i++) {
-		char c = this->_str[i];
-		if (c >= 97 && c <= 122) {
-			c &= 0b11011111;
-		}
-		ptr[i] = c;
-	}
-	return ret;
-}
-
-string string::toLower() {
-	string ret;
-	ret.reserve(this->length());
-	char* ptr = ret.toCharArray();
-	for (uint32_t i = 0; i < this->length(); i++) {
-		char c = this->_str[i];
-		if (c >= 65 && c <= 90) {
-			c |= 0b00100000;
-		}
-		ptr[i] = c;
-	}
-	return ret;
-}
+// <=============================== STRING CLASS ===============================>

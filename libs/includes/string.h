@@ -23,11 +23,12 @@ class string {
         string substring(uint32_t index);
         string substring(uint32_t index, uint32_t length);
         bool startsWith(string str);
-        bool endWith(string str);
-        string toUpper();
-        string toLower();
+        // bool endWith(string str);
+        // string toUpper();
+        // string toLower();
     private:
         char* _str;
+        uint32_t _length;
 };
 
 uint32_t strlen(char* str);

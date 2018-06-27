@@ -188,7 +188,7 @@ uint8_t Terminal_Class::getCursorY() {
 }
 
 string Terminal_Class::readLine() {
-    string ret = "";
+    string str;
     int backspaceXmax = Terminal.getCursorX();
     int backspaceYmax = Terminal.getCursorY();
     KeyboardEvent_t event = Keyboard.readEvent(true);
@@ -201,7 +201,7 @@ string Terminal_Class::readLine() {
                 cx--;
                 Terminal.putcar(' ', cx, cy);
                 Terminal.setCursor(cx, cy);
-                ret = ret.substring(0, ret.length() - 1);
+                str = str.substring(0, str.length() - 1);
             }
         }
         else if (event.type == Keyboard.EVENTTYPES.PRESSED) {
@@ -210,10 +210,10 @@ string Terminal_Class::readLine() {
                 char* cc = " ";
                 cc[0] = c;
                 Terminal.print(cc);
-                ret += c;
+                str += c;
             }
         }
         event = Keyboard.readEvent(true);
     }
-    return ret;
+    return str;
 }
