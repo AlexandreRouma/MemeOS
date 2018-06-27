@@ -44,20 +44,14 @@ void GDT_Class::load() {
     encodeGdtEntry(0x01, 0x00000000, 0xFFFFFFFF, 0x9A); // Code
     encodeGdtEntry(0x02, 0x00000000, 0xFFFFFFFF, 0x92); // Data
     encodeGdtEntry(0x03, 0x00000000, 0x00000000, 0x96); // Stack
-    
-    // Define task segments
-    GDT.setGDTEntry(0x04, 0x01001000, 0x00000000, 0xFF); // ucode
-    GDT.setGDTEntry(0x05, 0x01001000, 0x00000000, 0xF3); // udata
-    GDT.setGDTEntry(0x06, 0x00000000, 0x00000020, 0xF7); // ustack
+    encodeGdtEntry(0x04, (uint32_t)&kernel_tss, 0x67, 0xE9); // TSS
     
     initTss();
-
-    encodeGdtEntry(0x07, (uint32_t)&kernel_tss, 0x67, 0xE9);
 
     lgdt(&_GDT, sizeof(_GDT));
     ASM_RELOAD_SEGMENTS();
 
-    asm("  movw $0x38, %ax \n \
+    asm("  movw $0x20, %ax \n \
             ltr %ax");
 
     asm("  movw %%ss, %0 \n \

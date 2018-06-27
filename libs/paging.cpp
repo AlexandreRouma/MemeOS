@@ -2,6 +2,7 @@
 #include <paging.h>
 #include <multiboot.h>
 #include <panic.h>
+#include <terminal.h>
 
 Paging_Class Paging;
 
@@ -41,7 +42,7 @@ void Paging_Class::enable() {
     initPageTables();
     initPageTable();
     fillPageDirectory();
-    setPresent(0, ((uint32_t)ASM_KERNEL_END / 4096) + 4); // Allocate for the kernel
+    setPresent(0, ((uint32_t)ASM_KERNEL_END / 4096) + 1); // Allocate for the kernel
     ASM_LOAD_PAGE_DIRECTORY(page_directory);
     ASM_ENABLE_PAGING();
 }
@@ -124,8 +125,11 @@ uint32_t Paging_Class::findPages(uint32_t count) {
             if (free == 1) {
                 continous++;
             }
+            else {
+                continous = 0;
+            }
             if (continous >= count) {
-                return (i * 0x400000) + (j * 0x1000) - (count * 0x1000);
+                return (i * 0x400000) + (j * 0x1000);
             }
         }
     }
@@ -137,4 +141,17 @@ uint32_t Paging_Class::allocPages(uint32_t count) {
     uint32_t ptr = findPages(count);
     setPresent(ptr, count);
     return ptr;
+}
+
+uint32_t Paging_Class::getUsedPages() {
+    uint32_t n = 0;
+    for (uint32_t i = 0; i < 1024; i++) {
+        for (uint32_t j = 0; j < 1024; j++) {
+            uint8_t flags = page_tables[i][j];
+            if (flags & 1 == 1) {
+                n++;
+            }
+        }
+    }
+    return n;
 }

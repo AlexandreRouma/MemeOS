@@ -1,12 +1,12 @@
 .global ASM_RELOAD_SEGMENTS
 
 ASM_RELOAD_SEGMENTS:
-    mov 0x10, %ax
-    mov %ds, %ax
-    mov %es, %ax
-    mov %fs, %ax
-    mov %gs, %ax
-    mov %ss, %ax
+    movw $0x10, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %fs
+    movw %ax, %gs
+    movw %ax, %ss
     ljmp $0x08, $flush2
 
 flush2:

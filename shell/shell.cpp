@@ -19,6 +19,7 @@
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
 
 void task1(void) {
+    printf("Beep beep letuce from userspace task");
     while(1);
     return;
 }
@@ -58,6 +59,17 @@ void shell_main() {
         else if (cmd_str == "clear") {
             Terminal.clear();
         }
+        else if (cmd_str == "rapemem") {
+            while (1) {
+                void* ptr = malloc(1);
+                //free(ptr);
+                Terminal.print("Alloc:       0x");
+                Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
+                Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
+                Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
+                Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
+            }
+        }
         else if (cmd_str == "time") {
             Time_t time = Time.getTime();
             Terminal.print(dumpHexByte(time.hours));
@@ -91,15 +103,18 @@ void shell_main() {
             // 0xF0001000 - 0xF0002000 => ucode, udata
 
             // Allocate pages
-            //Paging.setPresent(0xEFFFF000, 1); // ustack
             Paging.setPresent(0x01000000, 1); // ustack
             Paging.setPresent(0x01001000, 1); // ucode
-            //Paging.setPresent(0xF0002000, 1); // ucode
 
             Paging.setDirectoryFlags(0x01000000, 0x07);
             Paging.setDirectoryFlags(0x01001000, 0x07);
             Paging.setFlags(0x01000000, 0x07);
             Paging.setFlags(0x01001000, 0x07);
+
+            // Define task segments
+            GDT.setGDTEntry(0x05, 0x01001000, 0x00000000, 0xFF); // ucode
+            GDT.setGDTEntry(0x06, 0x01001000, 0x00000000, 0xF3); // udata
+            GDT.setGDTEntry(0x07, 0x00000000, 0x00000020, 0xF7); // ustack
 
             // Load task
             memmove((void*)0x01001000, (void*)&task1, 0xFFF);
@@ -109,17 +124,17 @@ void shell_main() {
             uint32_t st = (uint32_t)&ASM_STACK_TOP;
 
             asm("   cli \n \
-                    push $0x33 \n \
+                    push $0x3B \n \
                     push $0x01001000 \n \
                     pushfl \n \
                     popl %%eax \n \
                     orl $0x200, %%eax \n \
                     and $0xffffbfff, %%eax \n \
                     push %%eax \n \
-                    push $0x23 \n \
+                    push $0x2B \n \
                     push $0x0 \n \
                     movl $ASM_STACK_TOP, %0 \n \
-                    movw $0x2B, %%ax \n \
+                    movw $0x33, %%ax \n \
                     movw %%ax, %%ds \n \
                     iret" : "=m" (st) : );
         }

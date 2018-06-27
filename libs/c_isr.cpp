@@ -75,7 +75,9 @@ extern "C"
     void _fault_handler(struct regs *r) {
         if (r->int_no < 32)
         {
-            kernel_panic(r->err_code, exception_messages[r->int_no]);
+            uint32_t val;
+            asm volatile ( "mov %%cr2, %0" : "=r"(val) );
+            kernel_panic(val, exception_messages[r->int_no]);
             for (;;);
         }
     }

@@ -59,6 +59,8 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     asm("sti");
 
+    Terminal.print("Finding ACPI pointer...  ");
+
     uint32_t RSDPTR = 0x00000000;
     char* RSDSIG = "RSD PTR ";
     char* RAMPTR = 0x00000000;
@@ -75,6 +77,8 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
             break;
         }
     }
+
+    Terminal.OK();
 
     Terminal.setColor(0x03);
 

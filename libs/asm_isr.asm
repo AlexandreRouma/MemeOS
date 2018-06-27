@@ -215,8 +215,7 @@ isr_common_stub:
     movw %ax,%gs
     movl %esp,%eax
     pushl %eax
-    movl $_fault_handler, %eax
-    call *%eax
+    call _fault_handler
     popl %eax
     popl %gs
     popl %fs
@@ -228,68 +227,82 @@ isr_common_stub:
 
 .global ASM_ISR_0
 ASM_ISR_0:
-    # pushal;
-
-    pusha
-    push %ds
-    push %es
-    push %fs
-    push %gs
+    pushal
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
     pushl %ebx
-    movw $0x08,%bx
+    movw $0x10,%bx
     movw %bx,%ds
     popl %ebx
 
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     call ISR_0
 
-    popl %gs
-    popl %fs
-    popl %es
-    popl %ds
-    popa
-
-    # popal;
+    popw %gs
+    popw %fs
+    popw %es
+    popw %ds
+    popal
     iret
 
 .global ASM_ISR_PIT
 ASM_ISR_PIT:
     pushal
-    # push %ds
-    # push %es
-    # push %fs
-    # push %gs
-    # pushl %ebx
-    # movw $0x10,%bx
-    # movw %bx,%ds
-    # popl %ebx
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
+    pushl %ebx
+    movw $0x10,%bx
+    movw %bx,%ds
+    popl %ebx
 
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     call ISR_PIT
 
-    # popl %gs
-    # popl %fs
-    # popl %es
-    # pushl %ds
-    # popl %ds
-
-    pushw %ds
+    popw %gs
+    popw %fs
+    popw %es
     popw %ds
-
     popal
     iret
 
 .global ASM_ISR_KBD
 ASM_ISR_KBD:
-    pushal;
+    pushal
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
+    pushl %ebx
+    movw $0x10,%bx
+    movw %bx,%ds
+    popl %ebx
+
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     call ISR_KBD
-    popal;
+
+    popw %gs
+    popw %fs
+    popw %es
+    popw %ds
+    popal
     iret
 
 .global ASM_ISR_SYSCALL
 ASM_ISR_SYSCALL:
-    pushal;
+    pushal
+    pushw %ds
+    pushw %es
+    pushw %fs
+    pushw %gs
+    pushl %ebx
+    movw $0x10,%bx
+    movw %bx,%ds
+    popl %ebx
+    
     cld /* C code following the sysV ABI requires DF to be clear on function entry */
     push %edx
     push %ecx
@@ -300,5 +313,10 @@ ASM_ISR_SYSCALL:
     pop %ebx
     pop %ecx
     pop %edx
-    popal;
+    
+    popw %gs
+    popw %fs
+    popw %es
+    popw %ds
+    popal
     iret
