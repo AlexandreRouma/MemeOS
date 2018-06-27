@@ -16,6 +16,8 @@ class string {
         bool operator!=(string str);
         bool operator==(char* str);
         bool operator!=(char* str);
+        void operator=(string str);
+        void operator=(char* str);
         operator char*() const { return this->_str; }
         char* toCharArray();
         uint32_t length();
@@ -23,9 +25,9 @@ class string {
         string substring(uint32_t index);
         string substring(uint32_t index, uint32_t length);
         bool startsWith(string str);
-        // bool endWith(string str);
-        // string toUpper();
-        // string toLower();
+        bool endWith(string str);
+        string toUpper();
+        string toLower();
     private:
         char* _str;
         uint32_t _length;

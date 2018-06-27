@@ -10,6 +10,7 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "*.tcc": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "xutility": "cpp"
     }
 }

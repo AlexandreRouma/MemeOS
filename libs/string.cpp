@@ -44,12 +44,16 @@ char* dumpHexByte(uint8_t n) {
 }
 
 string itoa(uint32_t n, uint8_t base) {
-	string ret = "";
+	if (n == 0) {
+		return "0";
+	}
+	string ret;
 	while (n > 0) {
 		uint32_t digit = n % base;
 		string str = "";
 		str += HEX_ALPHABET[digit];
-		ret = str + ret;
+		str += ret;
+		ret = str;
 		n -= digit;
 		n /= base;
 	}
@@ -102,7 +106,7 @@ string::~string() {
 
 string string::operator+(string str) {
 	string ret;
-	ret = this->toCharArray();
+	ret = this->_str;
 	ret += str;
 	return ret;
 }
@@ -151,6 +155,20 @@ bool string::operator!=(char* str) {
 	return !strcmp(this->_str, str);
 }
 
+void string::operator=(string str) {
+	this->_length = str.length();
+	this->_str = (char*)malloc(this->_length + 1);
+	memmove(this->_str, str.toCharArray(), this->_length);
+	this->_str[this->_length] = 0x00;
+}
+
+void string::operator=(char* str) {
+	this->_length = strlen(str);
+	this->_str = (char*)malloc(this->_length + 1);
+	memmove(this->_str, str, this->_length);
+	this->_str[this->_length] = 0x00;
+}
+
 uint32_t string::length() {
 	return this->_length;
 }
@@ -174,12 +192,13 @@ string string::substring(uint32_t index) {
 }
 
 string string::substring(uint32_t index, uint32_t length) {
-	string out;
-	out.reserve(length);
-    for (uint32_t i = index; i < index + length; i++) {
-        out += this->_str[i];
-    }
-    return out;
+	string ret;
+	if (index + length <= this->_length) {
+		for (uint32_t i = index; i < index + length; i++) {
+			ret += this->_str[i];
+		}
+	}
+	return ret;
 }
 
 bool string::startsWith(string str) {
@@ -187,9 +206,47 @@ bool string::startsWith(string str) {
 		return false;
 	}
 	for (uint32_t i = 0; i < str.length(); i++) {
-		if (this->_str[i] != str[i]);
+		if (this->_str[i] != str[i]) {
+			return false;
+		}
 	}
 	return true;
+}
+
+bool string::endWith(string str) {
+	if (str.length() > this->_length) {
+		return false;
+	}
+	for (uint32_t i = 0; i < str.length(); i++) {
+		if (this->_str[this->_length - str.length() + i] != str[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+string string::toUpper() {
+	string ret;
+	for (uint32_t i = 0; i < this->_length; i++) {
+		char c = this->_str[i];
+		if (c >= 97 && c <= 122) {
+			c &= 0b11011111;
+		}
+		ret += c;
+	}
+	return ret;
+}
+
+string string::toLower() {
+	string ret;
+	for (uint32_t i = 0; i < this->_length; i++) {
+		char c = this->_str[i];
+		if (c >= 65 && c <= 90) {
+			c |= 0b00100000;
+		}
+		ret += c;
+	}
+	return ret;
 }
 
 // <=============================== STRING CLASS ===============================>

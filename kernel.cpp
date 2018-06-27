@@ -55,8 +55,6 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Paging.enable();
     Terminal.OK();
 
-    BochsBreak();
-
     asm("sti");
 
     Terminal.print("Finding ACPI pointer...  ");
@@ -90,12 +88,6 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Terminal.print(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 8));
     Terminal.println(dumpHexByte(((uint32_t)(&ASM_KERNEL_END)) >> 0));
 
-    Terminal.print("Memory size:  0x");
-    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 24));
-    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 16));
-    Terminal.print(dumpHexByte((multiboot_info->mem_upper * 1024) >> 8));
-    Terminal.println(dumpHexByte((multiboot_info->mem_upper * 1024) >> 0));
-
     Terminal.print("Stack top:    0x");
     Terminal.print(dumpHexByte((uint32_t)ASM_STACK_TOP >> 24));
     Terminal.print(dumpHexByte((uint32_t)ASM_STACK_TOP >> 16));
@@ -110,7 +102,7 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.setColor(0x07);
     
-    shell_main();
+    shell_main(multiboot_info);
 
     for (;;) {
         asm("hlt");

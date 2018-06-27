@@ -24,9 +24,71 @@ void task1(void) {
     return;
 }
 
-void shell_main() {
+
+
+
+int bl_common(int drive, int numblock, int count)
+{
+        outb(0x1F1, 0x00);      /* NULL byte to port 0x1F1 */
+        outb(0x1F2, count);     /* Sector count */
+        outb(0x1F3, (unsigned char) numblock);  /* Low 8 bits of the block address */
+        outb(0x1F4, (unsigned char) (numblock >> 8));   /* Next 8 bits of the block address */
+        outb(0x1F5, (unsigned char) (numblock >> 16));  /* Next 8 bits of the block address */
+
+        /* Drive indicator, magic bits, and highest 4 bits of the block address */
+        outb(0x1F6, 0xE0 | (drive << 4) | ((numblock >> 24) & 0x0F));
+
+        return 0;
+}
+
+int bl_read(int drive, int numblock, int count, char *buf)
+{
+        uint16_t tmpword;
+        int idx;
+
+        bl_common(drive, numblock, count);
+        outb(0x1F7, 0x20);
+
+        /* Wait for the drive to signal that it's ready: */
+        while (!(inb(0x1F7) & 0x08));
+
+        for (idx = 0; idx < 256 * count; idx++) {
+                tmpword = inw(0x1F0);
+                buf[idx * 2] = (unsigned char) tmpword;
+                buf[idx * 2 + 1] = (unsigned char) (tmpword >> 8);
+        }
+
+        return count;
+}
+
+int bl_write(int drive, int numblock, int count, char *buf)
+{
+        uint16_t tmpword;
+        int idx;
+
+        bl_common(drive, numblock, count);
+        outb(0x1F7, 0x30);
+
+        /* Wait for the drive to signal that it's ready: */
+        while (!(inb(0x1F7) & 0x08));
+
+        for (idx = 0; idx < 256 * count; idx++) {
+                tmpword = (buf[idx * 2 + 1] << 8) | buf[idx * 2];
+                outw(0x1F0, tmpword);
+        }
+
+        return count;
+}
+
+
+
+
+void shell_main(MultibootInfo_t* boot_info) {
     Terminal.setColor(0x02);
-    Terminal.println("\nDankBASH v1.1, logged in as root.\n");
+    Terminal.print("\nDankBASH v1.1, logged in as root, ");
+    Terminal.print(itoa(boot_info->mem_upper / 1024, 10));
+    Terminal.println("Mb free.\n");
+
     Terminal.setColor(0x07);
     Terminal.showCursor(2);
 
@@ -53,6 +115,18 @@ void shell_main() {
                 Terminal.setColor(0x07);
             }
         }
+        else if (cmd_str == "memstats") {
+            uint32_t used = Paging.getUsedPages() / 256;
+            Terminal.print(itoa(used, 10));
+            Terminal.print("Mb used, ");
+            Terminal.print(itoa((boot_info->mem_upper / 1024) - used, 10));
+            Terminal.print("Mb free, ");
+            Terminal.print(itoa(boot_info->mem_upper / 1024, 10));
+            Terminal.print("Mb total (");
+            float percent = ((float)used / (float)(boot_info->mem_upper / 1024)) * 100;
+            Terminal.print(itoa(percent, 10));
+            Terminal.println("%)");
+        }
         else if (cmd_str == "ping") {
             Terminal.println("Pong !");
         }
@@ -60,28 +134,16 @@ void shell_main() {
             Terminal.clear();
         }
         else if (cmd_str == "rapemem") {
-            void* ptr = malloc(1);
-            free(ptr);
-            Terminal.print("Alloc 1:       0x");
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
-            Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
-
-            for (int i = 0; i < 2; i++) {
-                string a = "ur mom gay";
-                a += "LOL";
-                string b = "a";
-                b += a;
+            for (int i = 0; i < 5; i++) {
+                void* ptr = malloc(1024 * 1024);
             }
-
-            ptr = malloc(1);
-            free(ptr);
-            Terminal.print("Alloc 2:       0x");
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 24));
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 16));
-            Terminal.print(dumpHexByte((uint32_t)ptr >> 8));
-            Terminal.println(dumpHexByte((uint32_t)ptr >> 0));
+            Terminal.println("DED xD");
+        }
+        else if (cmd_str == "teststr") {
+            string str = "Hello World!";
+            if (str.endWith("World!")) {
+                Terminal.println(str.toLower());
+            }
         }
         else if (cmd_str == "time") {
             Time_t time = Time.getTime();
@@ -154,7 +216,7 @@ void shell_main() {
         else {
             Terminal.setColor(0x04);
             Terminal.print("Unknown command: '");
-            //Terminal.print(cmd_str);
+            Terminal.print(cmd_str);
             Terminal.println("'");
             Terminal.setColor(0x07);
         }

@@ -147,8 +147,8 @@ uint32_t Paging_Class::getUsedPages() {
     uint32_t n = 0;
     for (uint32_t i = 0; i < 1024; i++) {
         for (uint32_t j = 0; j < 1024; j++) {
-            uint8_t flags = page_tables[i][j];
-            if (flags & 1 == 1) {
+            uint8_t flags = page_tables[i][j] & 0x01;
+            if (flags == 1) {
                 n++;
             }
         }

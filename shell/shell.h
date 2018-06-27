@@ -1,1 +1,1 @@
-void shell_main();
+void shell_main(MultibootInfo_t* boot_info);
