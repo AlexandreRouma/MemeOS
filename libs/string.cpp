@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <terminal.h>
+#include <panic.h>
 
 uint32_t strlen(char* str){
     uint32_t len = 0;
@@ -136,6 +137,7 @@ char string::operator[](uint32_t i) {
 	if (i < this->_length) {
 		return this->_str[i];
 	}
+	kernel_panic(0xC0FEFE, "Array out of bounds");
 	return 0x00;
 }
 

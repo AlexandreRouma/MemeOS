@@ -26,7 +26,7 @@
         {
             "label": "Run",
             "type": "shell",
-            "command": "&('C:/Program Files/qemu/qemu-system-i386') -kernel bin/MemeOS.bin -serial mon:stdio",
+            "command": "&('C:/Program Files/qemu/qemu-system-i386') -kernel bin/MemeOS.bin -serial mon:stdio -drive file=hda.img,format=raw",
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -35,7 +35,7 @@
         {
             "label": "Run (With ISO)",
             "type": "shell",
-            "command": "&('C:/Program Files/qemu/qemu-system-i386') -cdrom bin/MemeOS.iso -serial mon:stdio",
+            "command": "&('C:/Program Files/qemu/qemu-system-i386') -cdrom bin/MemeOS.iso -serial mon:stdio -drive file=hda.img,format=raw",
             "group": {
                 "kind": "test",
                 "isDefault": true
