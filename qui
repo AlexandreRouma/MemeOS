@@ -1,0 +1,105 @@
+Filesystem volume name:   <none>
+Last mounted on:          /mnt
+Filesystem UUID:          67f085ed-e21a-4940-89f2-ebe7a878969e
+Filesystem magic number:  0xEF53
+Filesystem revision #:    1 (dynamic)
+Filesystem features:      ext_attr resize_inode dir_index filetype sparse_super large_file
+Filesystem flags:         signed_directory_hash 
+Default mount options:    user_xattr acl
+Filesystem state:         clean
+Errors behavior:          Continue
+Filesystem OS type:       Linux
+Inode count:              262144
+Block count:              1048576
+Reserved block count:     52428
+Free blocks:              1030063
+Free inodes:              262130
+First block:              0
+Block size:               4096
+Fragment size:            4096
+Reserved GDT blocks:      255
+Blocks per group:         32768
+Fragments per group:      32768
+Inodes per group:         8192
+Inode blocks per group:   512
+Filesystem created:       Wed Jun 27 22:28:20 2018
+Last mount time:          Wed Jun 27 22:28:26 2018
+Last write time:          Wed Jun 27 22:30:17 2018
+Mount count:              1
+Maximum mount count:      -1
+Last checked:             Wed Jun 27 22:28:20 2018
+Check interval:           0 (<none>)
+Lifetime writes:          72 kB
+Reserved blocks uid:      0 (user root)
+Reserved blocks gid:      0 (group root)
+First inode:              11
+Inode size:	          256
+Required extra isize:     28
+Desired extra isize:      28
+Default directory hash:   half_md4
+Directory Hash Seed:      3877461b-bd30-41f5-8a77-8d7a500f59e5
+Directories:              3
+ Group  0: block bitmap at 257, inode bitmap at 258, inode table at 259
+           31990 free blocks, 8180 free inodes, 2 used directories
+ Group  1: block bitmap at 33025, inode bitmap at 33026, inode table at 33027
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group  2: block bitmap at 65536, inode bitmap at 65537, inode table at 65538
+           32252 free blocks, 8190 free inodes, 1 used directory
+ Group  3: block bitmap at 98561, inode bitmap at 98562, inode table at 98563
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group  4: block bitmap at 131072, inode bitmap at 131073, inode table at 131074
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group  5: block bitmap at 164097, inode bitmap at 164098, inode table at 164099
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group  6: block bitmap at 196608, inode bitmap at 196609, inode table at 196610
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group  7: block bitmap at 229633, inode bitmap at 229634, inode table at 229635
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group  8: block bitmap at 262144, inode bitmap at 262145, inode table at 262146
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group  9: block bitmap at 295169, inode bitmap at 295170, inode table at 295171
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group 10: block bitmap at 327680, inode bitmap at 327681, inode table at 327682
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 11: block bitmap at 360448, inode bitmap at 360449, inode table at 360450
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 12: block bitmap at 393216, inode bitmap at 393217, inode table at 393218
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 13: block bitmap at 425984, inode bitmap at 425985, inode table at 425986
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 14: block bitmap at 458752, inode bitmap at 458753, inode table at 458754
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 15: block bitmap at 491520, inode bitmap at 491521, inode table at 491522
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 16: block bitmap at 524288, inode bitmap at 524289, inode table at 524290
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 17: block bitmap at 557056, inode bitmap at 557057, inode table at 557058
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 18: block bitmap at 589824, inode bitmap at 589825, inode table at 589826
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 19: block bitmap at 622592, inode bitmap at 622593, inode table at 622594
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 20: block bitmap at 655360, inode bitmap at 655361, inode table at 655362
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 21: block bitmap at 688128, inode bitmap at 688129, inode table at 688130
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 22: block bitmap at 720896, inode bitmap at 720897, inode table at 720898
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 23: block bitmap at 753664, inode bitmap at 753665, inode table at 753666
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 24: block bitmap at 786432, inode bitmap at 786433, inode table at 786434
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 25: block bitmap at 819457, inode bitmap at 819458, inode table at 819459
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group 26: block bitmap at 851968, inode bitmap at 851969, inode table at 851970
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 27: block bitmap at 884993, inode bitmap at 884994, inode table at 884995
+           31997 free blocks, 8192 free inodes, 0 used directories
+ Group 28: block bitmap at 917504, inode bitmap at 917505, inode table at 917506
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 29: block bitmap at 950272, inode bitmap at 950273, inode table at 950274
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 30: block bitmap at 983040, inode bitmap at 983041, inode table at 983042
+           32254 free blocks, 8192 free inodes, 0 used directories
+ Group 31: block bitmap at 1015808, inode bitmap at 1015809, inode table at 1015810
+           32254 free blocks, 8192 free inodes, 0 used directories
