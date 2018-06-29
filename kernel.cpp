@@ -12,6 +12,7 @@
 #include <multiboot.h>
 #include <paging.h>
 #include <pci.h>
+#include <ahci.h>
 #include "shell/shell.h"
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
@@ -32,33 +33,33 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
     Terminal.println("Welcome to MemeOS v1.5 !");
     Terminal.setColor(0x07);
 
-    Terminal.print("Loading GDT...           ");
+    Terminal.print("Loading GDT...               ");
     GDT.load();
     Terminal.OK();
 
-    Terminal.print("Remapping PIC...         ");
+    Terminal.print("Remapping PIC...             ");
     PIC.Init();
     Terminal.OK();
 
-    Terminal.print("Loading IDT...           ");
+    Terminal.print("Loading IDT...               ");
     IDT.load();
     Terminal.OK();
 
-    Terminal.print("Configuring PIT...       ");
+    Terminal.print("Configuring PIT...           ");
     PIT.Init();
     Terminal.OK();
 
-    Terminal.print("Initialising Keyboard... ");
+    Terminal.print("Initialising Keyboard...     ");
     Keyboard.Init();
     Terminal.OK();
 
-    Terminal.print("Enabling paging...       ");
+    Terminal.print("Enabling paging...           ");
     Paging.enable();
     Terminal.OK();
 
     asm("sti");
 
-    Terminal.print("Finding ACPI pointer...  ");
+    Terminal.print("Finding ACPI pointer...      ");
 
     uint32_t RSDPTR = 0x00000000;
     char* RSDSIG = "RSD PTR ";
@@ -79,8 +80,12 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.OK();
 
-    Terminal.print("Scanning PCI devices...  ");
+    Terminal.print("Scanning PCI devices...      ");
     PCI.scanDevices();
+    Terminal.OK();
+
+    Terminal.print("Scanning ACHI controllers... ");
+    AHCI.scanControllers();
     Terminal.OK();
 
     Terminal.setColor(0x03);

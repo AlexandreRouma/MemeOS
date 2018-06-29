@@ -1,3 +1,4 @@
+#pragma once
 #include <stdint.h>
 
 #define PCI_CONFIG_ADDRESS  0x0CF8

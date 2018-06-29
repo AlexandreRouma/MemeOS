@@ -18,6 +18,7 @@
 #include <atapio.h>
 #include <ext2fs.h>
 #include <pci.h>
+#include <ahci.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
 
@@ -83,6 +84,28 @@ void shell_main(MultibootInfo_t* boot_info) {
         else if (cmd_str == "lspci") {
             for (uint8_t id = 0; id < PCI.getDeviceCount(); id++) {
                 PCIDevice_t dev = PCI.getDevice(id);
+
+                Terminal.print(itoa(dev.bus, 16));
+                Terminal.print(":");
+                Terminal.print(itoa(dev.slot, 16));
+                Terminal.print(".");
+                Terminal.print(itoa(dev.function, 16));
+                Terminal.print(" - ");
+
+                Terminal.print(dev.deviceChip);
+                Terminal.print(": ");
+
+                Terminal.print(dev.vendorFullName);
+                Terminal.print(", ");
+                Terminal.print(dev.deviceChipDesc);
+                Terminal.print(" (rev ");
+                Terminal.print(itoa(dev.revisionID, 10));
+                Terminal.println(")");
+            }
+        }
+        else if (cmd_str == "lsblk") {
+            for (uint8_t id = 0; id < AHCI.getControllerCount(); id++) {
+                PCIDevice_t dev = AHCI.getController(id).pciDevice;
 
                 Terminal.print(itoa(dev.bus, 16));
                 Terminal.print(":");

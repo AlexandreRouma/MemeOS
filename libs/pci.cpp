@@ -72,19 +72,22 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
     dev.function = function;
     dev.vendorID = readConfig(bus, slot, function, 0x00);
     dev.deviceID = readConfig(bus, slot, function, 0x02);
-    dev.revisionID = readConfig(bus, slot, function, 0x04);
-    dev.progIF = readConfig(bus, slot, function, 0x05);
-    dev.subclass = readConfig(bus, slot, function, 0x06);
-    dev.classCode = readConfig(bus, slot, function, 0x07);
-    dev.cacheLineSize = readConfig(bus, slot, function, 0x08);
-    dev.latencyTimer = readConfig(bus, slot, function, 0x09);
-    dev.headerType = readConfig(bus, slot, function, 0x0A);
-    dev.bist = readConfig(bus, slot, function, 0x0B);
+    uint16_t _revid_progif = readConfig(bus, slot, function, 0x08);
+    dev.revisionID = _revid_progif;
+    dev.progIF = _revid_progif >> 8;
+    uint16_t _subclass_classcode = readConfig(bus, slot, function, 0x0A);
+    dev.subclass = _subclass_classcode;
+    dev.classCode = _subclass_classcode >> 8;
+    uint16_t _cls_ltm = readConfig(bus, slot, function, 0x0C);
+    dev.cacheLineSize = _cls_ltm;
+    dev.latencyTimer = _cls_ltm >> 8;
+    uint16_t _hdt_bist = readConfig(bus, slot, function, 0x0E);
+    dev.headerType = _hdt_bist;
+    dev.bist = _hdt_bist >> 8;
     dev.vendorShortName = getVendorShortName(dev.vendorID);
     dev.vendorFullName = getVendorFullName(dev.vendorID);
     dev.deviceChip = getDeviceName(dev.vendorID, dev.deviceID);
     dev.deviceChipDesc = getDeviceDescription(dev.vendorID, dev.deviceID);
-
     if (dev.headerType == 0x00) {
         uint32_t _BAR0 = readConfig(bus, slot, function, 0x10);
         _BAR0 |= readConfig(bus, slot, function, 0x12) << 16;
@@ -113,10 +116,12 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
         _ROM |= readConfig(bus, slot, function, 0x32) << 16;
         dev.standardHeader.expROMAddr = _ROM;
         dev.standardHeader.capPtr = readConfig(bus, slot, function, 0x34);
-        dev.standardHeader.intLine = readConfig(bus, slot, function, 0x3C);
-        dev.standardHeader.intPIN = readConfig(bus, slot, function, 0x3E);
-        dev.standardHeader.minGrant = readConfig(bus, slot, function, 0x40);
-        dev.standardHeader.maxLantency = readConfig(bus, slot, function, 0x42);
+        uint16_t _il_ip = readConfig(bus, slot, function, 0x3C);
+        dev.standardHeader.intLine = _il_ip;
+        dev.standardHeader.intPIN = _il_ip >> 8;
+        uint16_t _mgr_mlt = readConfig(bus, slot, function, 0x3E);
+        dev.standardHeader.minGrant = _mgr_mlt;
+        dev.standardHeader.maxLantency = _mgr_mlt >> 8;
     }
     else if (dev.headerType == 0x01) {
         uint32_t _BAR0 = readConfig(bus, slot, function, 0x10);
@@ -125,12 +130,15 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
         uint32_t _BAR1 = readConfig(bus, slot, function, 0x14);
         _BAR1 |= readConfig(bus, slot, function, 0x16) << 16;
         dev.pciToPciHeader.BAR1 = _BAR1;
-        dev.pciToPciHeader.primBusNumber = readConfig(bus, slot, function, 0x18);
-        dev.pciToPciHeader.secBusNumber = readConfig(bus, slot, function, 0x19);
-        dev.pciToPciHeader.subBusNumber = readConfig(bus, slot, function, 0x1A);
-        dev.pciToPciHeader.secLatencyTimer = readConfig(bus, slot, function, 0x1B);
-        dev.pciToPciHeader.ioBase = readConfig(bus, slot, function, 0x1C);
-        dev.pciToPciHeader.ioLimit = readConfig(bus, slot, function, 0x1D);
+        uint16_t _pbn_sbn = readConfig(bus, slot, function, 0x18);
+        dev.pciToPciHeader.primBusNumber = _pbn_sbn;
+        dev.pciToPciHeader.secBusNumber = _pbn_sbn >> 8;
+        uint16_t _sbn_slt = readConfig(bus, slot, function, 0x1A);
+        dev.pciToPciHeader.subBusNumber = _sbn_slt;
+        dev.pciToPciHeader.secLatencyTimer = _sbn_slt >> 8;
+        uint16_t _ib_il = readConfig(bus, slot, function, 0x1C);
+        dev.pciToPciHeader.ioBase = _ib_il;
+        dev.pciToPciHeader.ioLimit = _ib_il >> 8;
         dev.pciToPciHeader.secStatus = readConfig(bus, slot, function, 0x1E);
         dev.pciToPciHeader.memBase = readConfig(bus, slot, function, 0x20);
         dev.pciToPciHeader.memLimit = readConfig(bus, slot, function, 0x22);
@@ -145,10 +153,11 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
         dev.pciToPciHeader.ioBaseUpper = readConfig(bus, slot, function, 0x30);
         dev.pciToPciHeader.ioLimitUpper = readConfig(bus, slot, function, 0x32);
         dev.pciToPciHeader.capPtr = readConfig(bus, slot, function, 0x34);
-        dev.pciToPciHeader.intLine = readConfig(bus, slot, function, 0x3C);
-        dev.pciToPciHeader.intPIN = readConfig(bus, slot, function, 0x3D);
+        uint16_t _il_ip = readConfig(bus, slot, function, 0x3C);
+        dev.pciToPciHeader.intLine = _il_ip;
+        dev.pciToPciHeader.intPIN = _il_ip >> 8;
     }
-    else if (dev.headerType == 0x02) {
+    else if (dev.headerType == 0x02) {  // IMPORTANT !!!! FIX THIS NEXT !!!!!!! (replace signe byte reads by one with shift)
         uint32_t _CBA = readConfig(bus, slot, function, 0x10);
         _CBA |= readConfig(bus, slot, function, 0x12) << 16;
         dev.pciToCardbusHeader.cardbusBaseAddr = _CBA;
@@ -194,7 +203,7 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
 }
 
 void PCI_Class::scanDevices() {
-    _devices = (PCIDevice_t*)malloc(1);
+    _devices = (PCIDevice_t*)malloc(sizeof(PCIDevice_t));
     for (uint8_t bus = 0; bus < 16; bus++) {
         for (uint8_t slot = 0; slot < 32; slot++) {
             for (uint8_t function = 0; function < 8; function++) {
