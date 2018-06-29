@@ -33,7 +33,7 @@ void Terminal_Class::print(char* str) {
         if (str[i] == '\n'){
             newLine();
         }
-        else if (cursor_x == terminal_width - 1) {
+        else if (cursor_x == terminal_width) {
             newLine();
         }
         else {
@@ -49,7 +49,7 @@ void Terminal_Class::println(char* str) {
         if (str[i] == '\n'){
             newLine();
         }
-        else if (cursor_x == terminal_width - 1) {
+        else if (cursor_x == terminal_width) {
             newLine();
         }
         else {

@@ -11,6 +11,7 @@
 #include <keyboard.h>
 #include <multiboot.h>
 #include <paging.h>
+#include <pci.h>
 #include "shell/shell.h"
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
@@ -76,6 +77,10 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         }
     }
 
+    Terminal.OK();
+
+    Terminal.print("Scanning PCI devices...  ");
+    PCI.scanDevices();
     Terminal.OK();
 
     Terminal.setColor(0x03);

@@ -11,10 +11,12 @@ uint32_t strlen(char* str){
 }
 
 bool strcmp(char* str_a, char* str_b) {
-	if (strlen(str_a) != strlen(str_b)) {
+	uint32_t len_a = strlen(str_a);
+	uint32_t len_b = strlen(str_b);
+	if (len_a != len_b) {
 		return false;
 	}
-	for (uint32_t i = 0; i < strlen(str_a); i++) {
+	for (uint32_t i = 0; i < len_a; i++) {
 		if (str_a[i] != str_b[i]) {
 			return false;
 		}
@@ -63,7 +65,8 @@ string itoa(uint32_t n, uint8_t base) {
 
 uint32_t strcnt(char* str, char c) {
 	uint32_t count = 0;
-	for (uint32_t i = 0; i < strlen(str); i++) {
+	uint32_t len = strlen(str);
+	for (uint32_t i = 0; i < len; i++) {
 		if (str[i] == c) {
 			count++;
 		}
@@ -73,7 +76,8 @@ uint32_t strcnt(char* str, char c) {
 
 int strfio(char* str, char c) {
 	uint32_t index = 0;
-	for (uint32_t i = 0; i < strlen(str); i++) {
+	uint32_t len = strlen(str);
+	for (uint32_t i = 0; i < len; i++) {
 		if (str[i] == c) {
 			return i;
 		}
@@ -207,7 +211,8 @@ bool string::startsWith(string str) {
 	if (str.length() > this->_length) {
 		return false;
 	}
-	for (uint32_t i = 0; i < str.length(); i++) {
+	uint32_t len = str.length();
+	for (uint32_t i = 0; i < len; i++) {
 		if (this->_str[i] != str[i]) {
 			return false;
 		}
@@ -219,8 +224,9 @@ bool string::endWith(string str) {
 	if (str.length() > this->_length) {
 		return false;
 	}
-	for (uint32_t i = 0; i < str.length(); i++) {
-		if (this->_str[this->_length - str.length() + i] != str[i]) {
+	uint32_t len = str.length();
+	for (uint32_t i = 0; i < len; i++) {
+		if (this->_str[this->_length - len + i] != str[i]) {
 			return false;
 		}
 	}

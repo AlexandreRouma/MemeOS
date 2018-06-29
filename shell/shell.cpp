@@ -17,6 +17,7 @@
 #include <syscalls.h>
 #include <atapio.h>
 #include <ext2fs.h>
+#include <pci.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
 
@@ -79,9 +80,31 @@ void shell_main(MultibootInfo_t* boot_info) {
         else if (cmd_str == "hddtest") {
             parseFs();
         }
+        else if (cmd_str == "lspci") {
+            for (uint8_t id = 0; id < PCI.getDeviceCount(); id++) {
+                PCIDevice_t dev = PCI.getDevice(id);
+
+                Terminal.print(itoa(dev.bus, 16));
+                Terminal.print(":");
+                Terminal.print(itoa(dev.slot, 16));
+                Terminal.print(".");
+                Terminal.print(itoa(dev.function, 16));
+                Terminal.print(" - ");
+
+                Terminal.print(dev.deviceChip);
+                Terminal.print(": ");
+
+                Terminal.print(dev.vendorFullName);
+                Terminal.print(", ");
+                Terminal.print(dev.deviceChipDesc);
+                Terminal.print(" (rev ");
+                Terminal.print(itoa(dev.revisionID, 10));
+                Terminal.println(")");
+            }
+        }
         else if (cmd_str == "rapemem") {
-            for (int i = 0; i < 5; i++) {
-                void* ptr = malloc(1024 * 1024);
+            for (int i = 0; i < 10; i++) {
+                void* ptr = malloc(1024 * 100);
             }
             Terminal.println("DED xD");
         }
@@ -139,8 +162,6 @@ void shell_main(MultibootInfo_t* boot_info) {
 
             // Load task
             memmove((void*)0x01001000, (void*)&task1, 0xFFF);
-
-            BochsBreak();
 
             uint32_t st = (uint32_t)&ASM_STACK_TOP;
 

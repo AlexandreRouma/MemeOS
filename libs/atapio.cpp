@@ -3,6 +3,7 @@
 #include <io.h>
 #include <panic.h>
 #include <pit.h>
+#include <terminal.h>
 
 ATAPIO_Class ATAPIO;
 
@@ -28,21 +29,40 @@ int ATAPIO_Class::readBlock(int drive, int numblock, int count, char *buf) {
         kernel_panic(0x1234, "Null sector count read");
     }
 
+    Terminal.print("Waiting for drive ready... ");
+    inb(0x1F7);
+    inb(0x1F7);
+    inb(0x1F7);
+    inb(0x1F7);
+    uint8_t status = inb(0x1F7);
+	while ((status & 0x80) && !(status & 0x08)) {
+        status = inb(0x1F7);
+    }
+    Terminal.println("READY");
+
 	selectDrive(drive, numblock, count);
+
 	outb(0x1F7, 0x20);
 
     // Wait for ready signal
-    uint8_t status = (inb(0x1F7) & 0x08);
-	while (!status) {
-        status = (inb(0x1F7) & 0x08);
+    Terminal.print("Waiting for data... ");
+    inb(0x1F7);
+    inb(0x1F7);
+    inb(0x1F7);
+    inb(0x1F7);
+    status = inb(0x1F7);
+	while ((status & 0x80) && !(status & 0x08)) {
+        status = inb(0x1F7);
     }
-
+    Terminal.println("READING");
 
 	for (idx = 0; idx < 256 * count; idx++) {
 		tmpword = inw(0x1F0);
 		buf[idx * 2] = (uint8_t)tmpword;
 		buf[idx * 2 + 1] = (uint8_t)(tmpword >> 8);
 	}
+
+    outb(0x1F0, 0x04); // Reset
 
 	return count;
 }

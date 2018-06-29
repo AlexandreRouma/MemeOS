@@ -28,8 +28,6 @@ Ext2BaseSuperBlock_t parseBaseSuperblock() {
 Ext2ExtendedSuperBlock_t parseExtSuperblock() {
     Ext2ExtendedSuperBlock_t ret;
     char* buffer = (char*)malloc(1024);
-    //ATAPIO.readBlock(0, 2, 2, buffer);
-    //PIT.delay(1000);
     ATAPIO.readBlock(0, 2, 2, buffer);
     memmove(&ret, buffer + 84, sizeof(Ext2ExtendedSuperBlock_t));
     free(buffer);
@@ -78,10 +76,9 @@ void parseFs() {
         return;
     }
     if (_baseSuperBLock.versionMaj >= 1) {
-        
+        _extSuperBlock = parseExtSuperblock();
+        _extSuperBlock.present = true;
     }
-    _extSuperBlock = parseExtSuperblock();
-    _extSuperBlock.present = true;
     uint32_t blockGroupCount_b  = _baseSuperBLock.totalBlock / _baseSuperBLock.blockPerGroup;
     uint32_t blockGroupCount_i  = _baseSuperBLock.totalInode / _baseSuperBLock.inodePerGroup;
     if (blockGroupCount_b != blockGroupCount_i) {
@@ -99,7 +96,7 @@ void parseFs() {
     else {
         inodeSize = 128;
     }
-    parseBlockGroupDescriptorTable();
+    //parseBlockGroupDescriptorTable();
 
     uint32_t blockGroup = getBlockGroup(13);
     uint32_t inodeTableAddr = _blockGroupDescriptorTable[blockGroup].inodeStartBlockAddr;
