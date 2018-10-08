@@ -38,4 +38,4 @@ _end:
 .section .sizedetect
 .global ASM_KERNEL_END
 ASM_KERNEL_END:
-	# Kernel size detecting
+	# Kernel size detection

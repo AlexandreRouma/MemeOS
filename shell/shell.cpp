@@ -1,24 +1,24 @@
-#include <io.h>
-#include <gdt.h>
-#include <idt.h>
-#include <pic.h>
-#include <pit.h>
-#include <speaker.h>
-#include <string.h>
-#include <panic.h>
-#include <keyboard.h>
-#include <multiboot.h>
-#include <terminal.h>
-#include <serial.h>
-#include <liballoc.h>
-#include <time.h>
-#include <paging.h>
-#include <std/stdio.h>
-#include <syscalls.h>
-#include <atapio.h>
-#include <ext2fs.h>
-#include <pci.h>
-#include <ahci.h>
+#include <libs/kernel/io.h>
+#include <libs/kernel/gdt.h>
+#include <libs/kernel/idt.h>
+#include <libs/kernel/pic.h>
+#include <drivers/timer/pit.h>
+#include <drivers/pc_speaker/speaker.h>
+#include <libs/std/string.h>
+#include <libs/kernel/panic.h>
+#include <drivers/keyboard/keyboard.h>
+#include <libs/kernel/multiboot.h>
+#include <drivers/text_term/terminal.h>
+#include <drivers/serial/serial.h>
+#include <libs/kernel/liballoc.h>
+#include <drivers/rtc/time.h>
+#include <libs/kernel/paging.h>
+#include <libs/std/stdio.h>
+#include <libs/kernel/syscalls.h>
+#include <drivers/storage/atapio/atapio.h>
+#include <drivers/filesystems/ext2/ext2fs.h>
+#include <drivers/pci/pci.h>
+#include <drivers/storage/ahci/ahci.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
 
@@ -104,30 +104,33 @@ void shell_main(MultibootInfo_t* boot_info) {
             }
         }
         else if (cmd_str == "lsblk") {
-            for (uint8_t id = 0; id < AHCI.getControllerCount(); id++) {
-                PCIDevice_t dev = AHCI.getController(id).pciDevice;
-
-                Terminal.print(itoa(dev.bus, 16));
-                Terminal.print(":");
-                Terminal.print(itoa(dev.slot, 16));
-                Terminal.print(".");
-                Terminal.print(itoa(dev.function, 16));
-                Terminal.print(" - ");
-
-                Terminal.print(dev.deviceChip);
-                Terminal.print(": ");
-
-                Terminal.print(dev.vendorFullName);
-                Terminal.print(", ");
-                Terminal.print(dev.deviceChipDesc);
-                Terminal.print(" (rev ");
-                Terminal.print(itoa(dev.revisionID, 10));
-                Terminal.println(")");
-            }
+            // for (uint8_t id = 0; id < AHCI.getControllerCount(); id++) {
+            //     ACHIController_t cnt = AHCI.getController(id);
+            //     for (uint8_t d = 0; d < cnt.driveCount; d++) {
+            //         ACHIDrive_t drv = cnt.drives[d];
+            //         Terminal.print(itoa(drv.controllerID, 10));
+            //         Terminal.print(".");
+            //         Terminal.print(itoa(d, 10));
+            //         Terminal.print(": ");
+            //         if (drv.type == AHCI_DEV_SATA) {
+            //             Terminal.println("SATA");
+            //         }
+            //         if (drv.type == AHCI_DEV_SEMB) {
+            //             Terminal.println("SEMB");
+            //         }
+            //         if (drv.type == AHCI_DEV_PM) {
+            //             Terminal.println("PM");
+            //         }
+            //         if (drv.type == AHCI_DEV_SATAPI) {
+            //             Terminal.println("SATAPI");
+            //         }
+            //     }
+            // }
+            Terminal.println("WARNING: Unimplemented");
         }
         else if (cmd_str == "rapemem") {
-            for (int i = 0; i < 10; i++) {
-                void* ptr = malloc(1024 * 100);
+            for (int i = 0; i < 1000; i++) {
+                void* ptr = malloc(1024);
             }
             Terminal.println("DED xD");
         }

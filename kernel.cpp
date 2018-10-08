@@ -1,18 +1,19 @@
 #include <stdint.h>
-#include <terminal.h>
-#include <io.h>
-#include <gdt.h>
-#include <idt.h>
-#include <pic.h>
-#include <pit.h>
-#include <speaker.h>
-#include <string.h>
-#include <panic.h>
-#include <keyboard.h>
-#include <multiboot.h>
-#include <paging.h>
-#include <pci.h>
-#include <ahci.h>
+#include <drivers/text_term/terminal.h>
+#include <libs/kernel/io.h>
+#include <libs/kernel/gdt.h>
+#include <libs/kernel/idt.h>
+#include <libs/kernel/pic.h>
+#include <drivers/timer/pit.h>
+#include <drivers/pc_speaker/speaker.h>
+#include <libs/std/string.h>
+#include <libs/kernel/panic.h>
+#include <drivers/keyboard/keyboard.h>
+#include <libs/kernel/multiboot.h>
+#include <libs/kernel/paging.h>
+#include <drivers/pci/pci.h>
+#include <drivers/storage/ahci/ahci.h>
+#include <drivers/storage/floppy/floppy.h>
 #include "shell/shell.h"
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
@@ -30,36 +31,36 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         kernel_panic(0xFFFF, "Invalid multiboot signature !");
     }
 
-    Terminal.println("Welcome to MemeOS v1.5 !");
+    Terminal.println("Welcome to MemeOS v1.6 !");
     Terminal.setColor(0x07);
 
-    Terminal.print("Loading GDT...               ");
+    Terminal.print("Loading GDT...                          ");
     GDT.load();
     Terminal.OK();
 
-    Terminal.print("Remapping PIC...             ");
+    Terminal.print("Remapping PIC...                        ");
     PIC.Init();
     Terminal.OK();
 
-    Terminal.print("Loading IDT...               ");
+    Terminal.print("Loading IDT...                          ");
     IDT.load();
     Terminal.OK();
 
-    Terminal.print("Configuring PIT...           ");
+    Terminal.print("Configuring PIT...                      ");
     PIT.Init();
     Terminal.OK();
 
-    Terminal.print("Initialising Keyboard...     ");
+    Terminal.print("Initialising Keyboard...                ");
     Keyboard.Init();
     Terminal.OK();
 
-    Terminal.print("Enabling paging...           ");
+    Terminal.print("Enabling paging...                      ");
     Paging.enable();
     Terminal.OK();
 
     asm("sti");
 
-    Terminal.print("Finding ACPI pointer...      ");
+    Terminal.print("Finding ACPI pointer...                 ");
 
     uint32_t RSDPTR = 0x00000000;
     char* RSDSIG = "RSD PTR ";
@@ -80,13 +81,22 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.OK();
 
-    Terminal.print("Scanning PCI devices...      ");
+    Terminal.print("Scanning PCI devices...                 ");
     PCI.scanDevices();
     Terminal.OK();
 
-    Terminal.print("Scanning ACHI controllers... ");
-    AHCI.scanControllers();
-    Terminal.OK();
+    Terminal.print("Initializing floppy controller...       ");
+    if (Floppy.init()) {
+        Terminal.OK();
+    }
+    else {
+        Terminal.FAILED();
+    }
+    
+
+    // Terminal.print("Scanning ACHI controllers... ");
+    // AHCI.scanControllers();
+    // Terminal.OK();
 
     Terminal.setColor(0x03);
 
