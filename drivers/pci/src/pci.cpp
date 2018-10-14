@@ -3,7 +3,7 @@
 #include <libs/kernel/io.h>
 #include <libs/std/string.h>
 #include <drivers/text_term/terminal.h>
-#include <drivers/pci/pcivendors.h>
+#include <drivers/pci/pcivendors.hpp>
 
 PCI_Class PCI;
 
