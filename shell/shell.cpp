@@ -28,6 +28,8 @@ void task1(void) {
     return;
 }
 
+uint32_t testmap = 0;
+
 void shell_main(MultibootInfo_t* boot_info) {
     Terminal.setColor(0x02);
     Terminal.print("\nDankBASH v1.1, logged in as root, ");
@@ -79,7 +81,10 @@ void shell_main(MultibootInfo_t* boot_info) {
             Terminal.clear();
         }
         else if (cmd_str == "hddtest") {
-            parseFs();
+            //parseFs();
+            ATAPIODrive_t drive(0);
+            char* strlol = "Good evening peasants!";
+            drive.write(0x7FA, 22, (uint8_t*)strlol);
         }
         else if (cmd_str == "lspci") {
             for (uint8_t id = 0; id < PCI.getDeviceCount(); id++) {
@@ -166,6 +171,28 @@ void shell_main(MultibootInfo_t* boot_info) {
         }
         else if (cmd_str == "crash") {
             kernel_panic(0x4269, "Self triggered crash, no real exception here !");
+        }
+        else if (cmd_str == "pagemap") {
+            uint32_t phy = Paging.allocPages(1);
+            Paging.mapPage(0x000F0000, phy, 0b11);
+            Terminal.print("0x00000000 is now mapped to 0x");
+            Terminal.println(itoa(phy, 16));
+            testmap = phy;
+        }
+        else if (cmd_str == "checkmap") {
+            uint8_t* ptr1 = (uint8_t*)0x000F0000;
+            uint8_t* ptr2 = (uint8_t*)testmap;
+            bool failed = false;
+            for (int i = 0; i < 4096; i++) {
+                if (ptr1[i] != ptr2[i]) {
+                    Terminal.print("Missmatch at 0x");
+                    Terminal.println(itoa(i, 16));
+                    failed = true;
+                }
+            }
+            if (!failed) {
+                Terminal.println("Mapping worked!");
+            }
         }
         else if (cmd_str == "task") {
             // Task map:

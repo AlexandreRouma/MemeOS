@@ -4,8 +4,11 @@
 #include <libs/kernel/panic.h>
 #include <drivers/timer/pit.h>
 #include <drivers/text_term/terminal.h>
+#include <libs/std/math.h>
 
 ATAPIO_Class ATAPIO;
+
+extern "C" void __cxa_pure_virtual() { while (1); }
 
 int selectDrive(int drive, int numblock, int count)
 {
@@ -73,4 +76,38 @@ int ATAPIO_Class::writeBlock(int drive, int numblock, int count, char *buf) {
     }
 
     return count;
+}
+
+ATAPIODrive_t::ATAPIODrive_t(uint8_t id) {
+    this->id = id;
+}
+
+bool ATAPIODrive_t::read(uint64_t addr, uint64_t size, uint8_t* buf) {
+    uint64_t base = floor(addr / 512);
+    uint64_t limit = ceil((addr + size) / 512);
+    uint64_t start = addr % 512;
+    uint8_t* buffer = (uint8_t*)malloc(((limit - base) + 1) * 512);
+    ATAPIO.readBlock(0, base, (limit - base) + 1, (char*)buffer); // TODO: Change first param to this->id
+    memmove(buf, buffer + start, size);
+    free(buffer);
+    return true; // TODO: Check operation worked
+}
+
+bool ATAPIODrive_t::write(uint64_t addr, uint64_t size, uint8_t* buf) {
+    uint64_t base = floor((float)addr / 512.0f);
+    uint64_t limit = floor((float)(addr + size) / 512.0f);
+    uint64_t start = addr % 512;
+    uint8_t* buffer = (uint8_t*)malloc(((limit - base) + 1) * 512);
+
+    Terminal.println(itoa(base, 10));
+    Terminal.println(itoa(limit, 10));
+    Terminal.println(itoa(start, 10));
+    Terminal.println(itoa((limit - base) + 1, 10));
+
+    ATAPIO.readBlock(0, base, (limit - base) + 2, (char*)buffer); // TODO: Change first param to this->id
+    memmove(buffer + start, buf, size);
+    Terminal.println((char*)(buffer + start));
+    ATAPIO.writeBlock(0, base, (limit - base) + 2, (char*)buffer);
+    free(buffer);
+    return true; // TODO: Check operation worked
 }

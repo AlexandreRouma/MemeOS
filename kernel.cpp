@@ -14,7 +14,9 @@
 #include <drivers/pci/pci.h>
 #include <drivers/storage/ahci/ahci.h>
 #include <drivers/storage/floppy/floppy.h>
+#include <drivers/storage/atapio/atapio.h>
 #include "shell/shell.h"
+#include <drivers/storage/drive.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
 
@@ -33,10 +35,15 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.println("Welcome to MemeOS v1.6 !");
     Terminal.setColor(0x07);
-
     Terminal.print("Loading GDT...                          ");
     GDT.load();
     Terminal.OK();
+
+    Terminal.print("Enabling paging...                      ");
+    Paging.enable();
+    Terminal.OK();
+
+    // Memory Management can now be used!
 
     Terminal.print("Remapping PIC...                        ");
     PIC.Init();
@@ -52,10 +59,6 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.print("Initialising Keyboard...                ");
     Keyboard.Init();
-    Terminal.OK();
-
-    Terminal.print("Enabling paging...                      ");
-    Paging.enable();
     Terminal.OK();
 
     asm("sti");
@@ -93,7 +96,10 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         Terminal.FAILED();
     }
     
+    Terminal.print("Scanning ATA devices...                 ");
+    Terminal.OK();
 
+    // -drive id=disk,file=hda.img,if=none -device ahci,id=ahci -device ide-drive,drive=disk,bus=ahci.0
     // Terminal.print("Scanning ACHI controllers... ");
     // AHCI.scanControllers();
     // Terminal.OK();
