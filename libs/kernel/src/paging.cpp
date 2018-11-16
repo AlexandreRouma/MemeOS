@@ -9,6 +9,8 @@ Paging_Class Paging;
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
 uint32_t page_tables[1024][1024] __attribute__((aligned(4096)));
 
+uint32_t _maxMem = 0;
+
 void initPageDirectory() {
     for (uint16_t i = 0; i < 1024; i++) {
         page_directory[i] = 0x00000002;
@@ -37,7 +39,8 @@ void fillPageDirectory() {
     }
 }
 
-void Paging_Class::enable() {
+void Paging_Class::enable(uint32_t maxmem) {
+    _maxMem = maxmem;
     initPageDirectory();
     initPageTables();
     initPageTable();

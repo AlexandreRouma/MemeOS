@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <libs/std/string.h>
+#include <libs/std/stream.h>
 
 class Terminal_Class {
     public:
@@ -25,6 +26,10 @@ class Terminal_Class {
         uint8_t getCursorX();
         uint8_t getCursorY();
         string readLine();
+        
+        stream<char> outStream;
+private:
+    static void _streamHandler(char*);
 };
 
 extern Terminal_Class Terminal;

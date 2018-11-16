@@ -1,0 +1,4 @@
+/mnt/d/Documents/GitHub/MemeOS/build/CMakeFiles/edit_cache.dir
+/mnt/d/Documents/GitHub/MemeOS/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/Documents/GitHub/MemeOS/build/CMakeFiles/MemeOS.dir
+/mnt/d/Documents/GitHub/MemeOS/build/CMakeFiles/iso.dir

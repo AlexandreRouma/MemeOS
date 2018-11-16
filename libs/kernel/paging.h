@@ -2,7 +2,7 @@
 
 class Paging_Class {
     public:
-        void enable();
+        void enable(uint32_t maxmem);
         void mapPage(uint32_t phy, uint32_t virt, uint16_t flags);
         uint32_t getPhysicalAddr(uint32_t virt);
         uint16_t getFlags(uint32_t virt);

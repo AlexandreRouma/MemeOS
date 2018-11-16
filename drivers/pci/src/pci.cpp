@@ -203,16 +203,12 @@ PCIDevice_t PCI_Class::getDevice(uint8_t bus, uint8_t slot, uint8_t function) {
 }
 
 void PCI_Class::scanDevices() {
-    _devices = (PCIDevice_t*)malloc(sizeof(PCIDevice_t));
     for (uint8_t bus = 0; bus < 16; bus++) {
         for (uint8_t slot = 0; slot < 32; slot++) {
             for (uint8_t function = 0; function < 8; function++) {
                 uint16_t vendorID = PCI.getVendorID(bus, slot, function);
                 if (vendorID != 0xFFFF) {
-                    PCIDevice_t dev = PCI.getDevice(bus, slot, function);
-                    _deviceCount++;
-                    _devices = (PCIDevice_t*)realloc((void*)_devices, sizeof(PCIDevice_t) * _deviceCount);
-                    _devices[_deviceCount - 1] = dev;
+                    _devices.push_back(PCI.getDevice(bus, slot, function));
                 }
             }
         }
@@ -220,16 +216,9 @@ void PCI_Class::scanDevices() {
 }
 
 PCIDevice_t PCI_Class::getDevice(uint32_t id) {
-    if (id < _deviceCount) {
-        return _devices[id];
-    }
-    else {
-        PCIDevice_t invalid;
-        invalid.vendorID = 0xFFFF;
-        return invalid;
-    }
+    return _devices[id];
 }
 
 uint32_t PCI_Class::getDeviceCount() {
-    return _deviceCount;
+    return _devices.size();
 }

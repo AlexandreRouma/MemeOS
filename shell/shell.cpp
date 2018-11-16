@@ -19,8 +19,14 @@
 #include <drivers/filesystems/ext2/ext2fs.h>
 #include <drivers/pci/pci.h>
 #include <drivers/storage/ahci/ahci.h>
+#include <libs/std/vector.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
+
+extern "C" {
+    extern void* _END_ASM_USER_TASK;
+    extern void* ASM_USER_TASK;
+}
 
 void task1(void) {
     printf("Beep beep letuce from userspace task");
@@ -40,6 +46,11 @@ void shell_main(MultibootInfo_t* boot_info) {
     Terminal.showCursor(2);
 
     while (true) {
+        vector<int> ints;
+        ints.push_back(420);
+        ints.pop_back();
+        ints.push_front(420);
+        ints.pop_front();
         Terminal.setColor(0x09);
         Terminal.print("MemeOS");
         Terminal.setColor(0x07);
@@ -134,7 +145,7 @@ void shell_main(MultibootInfo_t* boot_info) {
             Terminal.println("WARNING: Unimplemented");
         }
         else if (cmd_str == "rapemem") {
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 100; i++) {
                 void* ptr = malloc(1024);
             }
             Terminal.println("DED xD");
@@ -194,6 +205,10 @@ void shell_main(MultibootInfo_t* boot_info) {
                 Terminal.println("Mapping worked!");
             }
         }
+        else if (cmd_str == "tasktest") {
+            Terminal.println(itoa((uint32_t)ASM_USER_TASK, 16));
+            Terminal.println(itoa((uint32_t)_END_ASM_USER_TASK, 16));
+        }
         else if (cmd_str == "task") {
             // Task map:
             // 0xF0000000 - 0xF0001000 => ustack
@@ -209,9 +224,13 @@ void shell_main(MultibootInfo_t* boot_info) {
             Paging.setFlags(0x01001000, 0x07);
 
             // Define task segments
-            GDT.setGDTEntry(0x05, 0x01001000, 0x00000000, 0xFF); // ucode
-            GDT.setGDTEntry(0x06, 0x01001000, 0x00000000, 0xF3); // udata
-            GDT.setGDTEntry(0x07, 0x00000000, 0x00000020, 0xF7); // ustack
+            // GDT.setGDTEntry(0x05, 0x01001000, 0x00000000, 0xFF); // ucode
+            // GDT.setGDTEntry(0x06, 0x01001000, 0x00000000, 0xF3); // udata
+            // GDT.setGDTEntry(0x07, 0x00000000, 0x00000020, 0xF7); // ustack
+
+            GDT.allocEntry(0x01001000, 0x00000000, GDT_ACCESS_PRESENT | GDT_ACCESS_EXEC | GDT_ACCESS_RW | GDT_ACCESS_PRIV_3, GDT_FLAG_GR_PAGE | GDT_FLAG_SZ_32B);
+            GDT.allocEntry(0x01001000, 0x00000000, GDT_ACCESS_PRESENT | GDT_ACCESS_EXEC | GDT_ACCESS_RW | GDT_ACCESS_PRIV_3, GDT_FLAG_GR_PAGE | GDT_FLAG_SZ_32B);
+            GDT.allocEntry(0x00000000, 0x00000020, GDT_ACCESS_PRESENT | GDT_ACCESS_DIR_D | GDT_ACCESS_RW | GDT_ACCESS_PRIV_3, GDT_FLAG_SZ_32B);
 
             // Load task
             memmove((void*)0x01001000, (void*)&task1, 0xFFF);

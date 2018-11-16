@@ -1,81 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "WSL",
             "includePath": [
-                "/usr/include",
-                "/usr/local/include",
-                "${workspaceRoot}/libs/includes"
-            ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "${workspaceRoot}",
-                    "${workspaceRoot}/libs/includes"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "macFrameworkPath": [
-                "/System/Library/Frameworks",
-                "/Library/Frameworks"
-            ]
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "/usr/include",
-                "/usr/local/include",
-                "${workspaceRoot}/libs/includes"
-            ],
-            "defines": [],
-            "intelliSenseMode": "clang-x64",
-            "browse": {
-                "path": [
-                    "/usr/include",
-                    "/usr/local/include",
-                    "${workspaceRoot}/libs/includes"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
-        },
-        {
-            "name": "Win32",
-            "includePath": [
-                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Tools/MSVC/14.10.25017/include/*",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
-                "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
-                "${workspaceRoot}",
-                "${workspaceRoot}/libs",
-                "${workspaceFolder}/libs/includes",
-                "D:/cygwin64/usr/include",
-                "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/6.3.0/include"
+                "${workspaceFolder}",
+                "${workspaceFolder}/libs/std"
             ],
             "defines": [
                 "_DEBUG",
-                "UNICODE"
+                "UNICODE",
+                "_UNICODE"
             ],
-            "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Enterprise/VC/Tools/MSVC/14.10.25017/include/*",
-                    "C:/Program Files (x86)/Windows Kits/8.1/Include/um",
-                    "C:/Program Files (x86)/Windows Kits/8.1/Include/shared",
-                    "C:/Program Files (x86)/Windows Kits/8.1/Include/winrt",
-                    "${workspaceRoot}/libs/includes",
-                    "D:/cygwin64/usr/include",
-                    "D:/cygwin64/lib/gcc/x86_64-pc-cygwin/6.3.0/include"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
+            "compilerPath": "/home/dragon/opt/cross/bin/i686-elf-gcc",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4

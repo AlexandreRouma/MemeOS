@@ -1,5 +1,13 @@
 #include <stdint.h>
 
+#define IDT_ATTR_PRESENT    0x80
+#define IDT_ATTR_PRIV_3     0x60
+#define IDT_ATTR_PRIV_2     0x40
+#define IDT_ATTR_PRIV_1     0x20
+#define IDT_ATTR_TYPE_INT   0x0E
+#define IDT_ATTR_TYPE_TRAP  0x0F
+#define IDT_ATTR_TYPE_TASK  0x15
+
 class IDT_Class {
     public:
         void load();

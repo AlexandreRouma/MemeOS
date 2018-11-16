@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 struct tss {
     uint16_t    previous_task, __previous_task_unused;
     uint32_t    esp0;
@@ -18,11 +20,7 @@ struct tss {
     uint16_t    debug_flag, io_map;
 } __attribute__ ((packed));
 
-struct tss kernel_tss;
+extern struct tss kernel_tss;
 
-inline void initTss() {
-    kernel_tss.debug_flag = 0x00;
-    kernel_tss.io_map = 0x00;
-    kernel_tss.esp0 = (uint32_t)&ASM_STACK_TOP;
-    kernel_tss.ss0 = 0x18;
-}
+void initTss();
+void loadTss();

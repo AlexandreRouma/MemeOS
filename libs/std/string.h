@@ -38,7 +38,8 @@ class string {
 uint32_t strlen(char* str);
 bool strcmp(char* str_a, char* str_b);
 void* memmove(void* dstptr, void* srcptr, uint64_t size);
-void* memcmp(void* aprt, void* bptr, uint64_t size);
+bool memcmp(void* aptr, void* bptr, uint64_t size);
+void* memset(void* bufptr, uint8_t value, uint64_t size);
 char* dumpHexByte(uint8_t n);
 string itoa(uint32_t n, uint8_t base);
 uint32_t strcnt(char* str, char c);

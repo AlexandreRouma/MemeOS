@@ -18,6 +18,7 @@ uint8_t last_clear_color = 0x00;
 void Terminal_Class::Init(uint8_t width, uint8_t height) {
     terminal_width = width;
     terminal_height = height;
+    outStream = stream<char>(&_streamHandler);
 }
 
 void Terminal_Class::setColor(char color) {
@@ -249,4 +250,8 @@ string Terminal_Class::readLine() {
         event = Keyboard.readEvent(true);
     }
     return str;
+}
+
+void Terminal_Class::_streamHandler(char* str) {
+    Terminal.print(str);
 }

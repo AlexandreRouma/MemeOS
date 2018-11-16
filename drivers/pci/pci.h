@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <libs/std/vector.h>
 
 #define PCI_CONFIG_ADDRESS  0x0CF8
 #define PCI_CONFIG_DATA     0x0CFC
@@ -105,8 +106,7 @@ class PCI_Class {
         uint32_t getDeviceCount();
 
     private:
-        PCIDevice_t* _devices;
-        uint32_t _deviceCount;
+        vector<PCIDevice_t> _devices;
 };
 
 extern PCI_Class PCI;

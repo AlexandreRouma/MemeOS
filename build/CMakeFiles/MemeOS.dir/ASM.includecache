@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/Documents/GitHub/MemeOS/libs/kernel/src/asm_gdt.asm
+
+/mnt/d/Documents/GitHub/MemeOS/libs/kernel/src/asm_isr.asm
+
+/mnt/d/Documents/GitHub/MemeOS/libs/kernel/src/asm_paging.asm
+
+/mnt/d/Documents/GitHub/MemeOS/loader.asm
+
+/mnt/d/Documents/GitHub/MemeOS/shell/testtask.asm
+

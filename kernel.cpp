@@ -17,8 +17,16 @@
 #include <drivers/storage/atapio/atapio.h>
 #include "shell/shell.h"
 #include <drivers/storage/drive.h>
+#include <libs/kernel/tss.h>
+#include <libs/std/stream.h>
 
 #define BochsBreak() outw(0x8A00,0x8A00); outw(0x8A00,0x08AE0);
+
+struct VBE2Block_t {
+    uint8_t signature[4];
+    uint8_t ver_maj;
+    uint8_t ver_min;
+};
 
 extern "C" // Use C link for kernel_main
 
@@ -33,14 +41,19 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         kernel_panic(0xFFFF, "Invalid multiboot signature !");
     }
 
-    Terminal.println("Welcome to MemeOS v1.6 !");
+    char* data = "Hello from stream";
+
+    Terminal.outStream.write(data, strlen(data));
+
+    Terminal.println("Welcome to MemeOS v1.75 !");
     Terminal.setColor(0x07);
+    
     Terminal.print("Loading GDT...                          ");
     GDT.load();
     Terminal.OK();
 
     Terminal.print("Enabling paging...                      ");
-    Paging.enable();
+    Paging.enable(multiboot_info->mem_upper / 4);
     Terminal.OK();
 
     // Memory Management can now be used!
@@ -51,6 +64,13 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
 
     Terminal.print("Loading IDT...                          ");
     IDT.load();
+    Terminal.OK();
+
+    // Interrupts can now be used!
+
+    Terminal.print("Loading TSS...                          ");
+    initTss();
+    loadTss();
     Terminal.OK();
 
     Terminal.print("Configuring PIT...                      ");
@@ -82,27 +102,34 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         }
     }
 
-    Terminal.OK();
-
-    Terminal.print("Scanning PCI devices...                 ");
-    PCI.scanDevices();
-    Terminal.OK();
-
-    Terminal.print("Initializing floppy controller...       ");
-    if (Floppy.init()) {
+    if (RSDPTR != 0) {
         Terminal.OK();
     }
     else {
         Terminal.FAILED();
     }
+
+
+    Terminal.print("Scanning PCI devices...                 ");
+    PCI.scanDevices();
+    Terminal.OK();
+
+    // Terminal.print("Initializing floppy controller...       ");
+    // if (Floppy.init()) {
+    //     Terminal.OK();
+    // }
+    // else {
+    //     Terminal.FAILED();
+    // }
     
     Terminal.print("Scanning ATA devices...                 ");
+    // Enable ata shit here
     Terminal.OK();
 
     // -drive id=disk,file=hda.img,if=none -device ahci,id=ahci -device ide-drive,drive=disk,bus=ahci.0
-    // Terminal.print("Scanning ACHI controllers... ");
-    // AHCI.scanControllers();
-    // Terminal.OK();
+    //Terminal.print("Scanning ACHI controllers... ");
+    //AHCI.scanControllers();
+    //Terminal.OK();
 
     Terminal.setColor(0x03);
 
