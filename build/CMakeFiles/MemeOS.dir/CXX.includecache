@@ -35,6 +35,8 @@ stdint.h
 .././drivers/serial/serial.h
 stdint.h
 -
+libs/std/stream.h
+-
 
 .././drivers/storage/ahci/ahci.h
 
@@ -286,6 +288,8 @@ libs/kernel/paging.h
 drivers/pci/pci.h
 -
 drivers/storage/ahci/ahci.h
+-
+drivers/serial/serial.h
 -
 drivers/storage/floppy/floppy.h
 -

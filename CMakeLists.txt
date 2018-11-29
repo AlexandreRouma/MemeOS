@@ -16,6 +16,8 @@ include_directories(MemeOS "./")
 file(GLOB KERN_SRC      "*.cpp" "*.asm")
 
 if(${ARCH} STREQUAL "x86")
+    # Configure code
+
     # Driver source
     file(GLOB DRV_FS_EXT2   "drivers/filesystems/ext2/src/*.cpp" "drivers/filesystems/ext2/src/*.asm")
     file(GLOB DRV_KEYBOARD  "drivers/keyboard/src/*.cpp" "drivers/keyboard/src/*.asm")

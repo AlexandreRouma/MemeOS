@@ -56,6 +56,7 @@ CMakeFiles/MemeOS.dir/drivers/rtc/src/time.cpp.o: ../drivers/rtc/src/time.cpp
 CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: .././drivers/serial/serial.h
 CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: .././libs/kernel/io.h
 CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: .././libs/kernel/liballoc.h
+CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: .././libs/std/stream.h
 CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: .././libs/std/string.h
 CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o: ../drivers/serial/src/serial.cpp
 
@@ -94,6 +95,7 @@ CMakeFiles/MemeOS.dir/drivers/timer/src/pit.cpp.o: ../drivers/timer/src/pit.cpp
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/keyboard/keyboard.h
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/pc_speaker/speaker.h
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/pci/pci.h
+CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/serial/serial.h
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/storage/ahci/ahci.h
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/storage/atapio/atapio.h
 CMakeFiles/MemeOS.dir/kernel.cpp.o: .././drivers/storage/drive.h

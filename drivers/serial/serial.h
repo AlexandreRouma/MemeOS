@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <libs/std/stream.h>
 
 class Serial {
     public:
@@ -9,4 +10,8 @@ class Serial {
 
         uint16_t baudrate;
         uint16_t address;
+        stream<char, Serial> outStream;
+
+private:
+    static void _streamHandler(char*, int, Serial*);
 };

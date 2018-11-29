@@ -27,9 +27,9 @@ class Terminal_Class {
         uint8_t getCursorY();
         string readLine();
         
-        stream<char> outStream;
+        stream<char, Terminal_Class> outStream;
 private:
-    static void _streamHandler(char*);
+    static void _streamHandler(char*, int, Terminal_Class*);
 };
 
 extern Terminal_Class Terminal;

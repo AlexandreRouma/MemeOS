@@ -57,6 +57,7 @@ CMakeFiles/MemeOS.dir/drivers/serial/src/serial.cpp.o
  .././drivers/serial/serial.h
  .././libs/kernel/io.h
  .././libs/kernel/liballoc.h
+ .././libs/std/stream.h
  .././libs/std/string.h
  /mnt/d/Documents/GitHub/MemeOS/drivers/serial/src/serial.cpp
 CMakeFiles/MemeOS.dir/drivers/storage/atapio/src/atapio.cpp.o
@@ -95,6 +96,7 @@ CMakeFiles/MemeOS.dir/kernel.cpp.o
  .././drivers/keyboard/keyboard.h
  .././drivers/pc_speaker/speaker.h
  .././drivers/pci/pci.h
+ .././drivers/serial/serial.h
  .././drivers/storage/ahci/ahci.h
  .././drivers/storage/atapio/atapio.h
  .././drivers/storage/drive.h

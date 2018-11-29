@@ -13,6 +13,7 @@
 #include <libs/kernel/paging.h>
 #include <drivers/pci/pci.h>
 #include <drivers/storage/ahci/ahci.h>
+#include <drivers/serial/serial.h>
 #include <drivers/storage/floppy/floppy.h>
 #include <drivers/storage/atapio/atapio.h>
 #include "shell/shell.h"
@@ -28,6 +29,12 @@ struct VBE2Block_t {
     uint8_t ver_min;
 };
 
+void test(iostream<char> strm) {
+    return;
+    char* data = "Hello from stream\n";
+    strm.write(data, 18);
+}
+
 extern "C" // Use C link for kernel_main
 
 void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info) 
@@ -41,11 +48,12 @@ void kernel_main(uint32_t multiboot_magic, MultibootInfo_t* multiboot_info)
         kernel_panic(0xFFFF, "Invalid multiboot signature !");
     }
 
-    char* data = "Hello from stream";
+    Serial serial(115200, 0x3F8);
 
-    Terminal.outStream.write(data, strlen(data));
+    test(serial.outStream);
+    //test(Terminal.outStream);
 
-    Terminal.println("Welcome to MemeOS v1.75 !");
+    Terminal.println("Welcome to MemeOS v1.8 !");
     Terminal.setColor(0x07);
     
     Terminal.print("Loading GDT...                          ");

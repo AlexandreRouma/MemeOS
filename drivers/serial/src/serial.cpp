@@ -14,6 +14,7 @@ Serial::Serial(uint16_t baud, uint16_t addr) {
     lcr = inb(addr + 0x03);
     lcr &= 0x7F;
     outb(addr + 0x03, lcr);
+    outStream = stream<char, Serial>(_streamHandler, this);
 }
 
 void Serial::print(char* str) {
@@ -31,4 +32,10 @@ void Serial::println(char* str) {
 
 void Serial::write(char c) {
     outb(this->address, c);
+}
+
+void Serial::_streamHandler(char* str, int size, Serial* serial) {
+    for (int i = 0; i < size; i++) {
+        serial->write(str[i]);
+    }
 }
